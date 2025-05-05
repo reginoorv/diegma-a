@@ -63,61 +63,128 @@ export default function Home() {
         <Clients />
         
         {/* Projects preview section */}
-        <section className="py-16 bg-[#F8F8F8]">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <section className="relative py-24 overflow-hidden">
+          {/* Background gradients and decorative elements */}
+          <div className="absolute inset-0 bg-gradient-to-b from-white via-gray-50 to-gray-100 z-0"></div>
+          <div className="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-white to-transparent z-0"></div>
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#FFD700]/5 rounded-full blur-3xl z-0"></div>
+          <div className="absolute -bottom-20 -left-20 w-60 h-60 bg-[#FFD700]/10 rounded-full blur-3xl z-0"></div>
+          
+          <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div 
-              className="text-center mb-12"
+              className="text-center mb-16"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
             >
-              <h2 className="text-3xl font-bold font-serif mb-4">Proyek Kami</h2>
-              <p className="text-[#4A4A4A] max-w-2xl mx-auto">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+              >
+                <h2 className="text-3xl md:text-4xl font-bold mb-6">Proyek Kami</h2>
+                <div className="w-24 h-1 bg-[#FFD700] mx-auto mb-8"></div>
+              </motion.div>
+              <p className="text-[#4A4A4A] max-w-2xl mx-auto text-lg">
                 Temukan beragam karya dan proyek yang telah kami selesaikan, dari residensial hingga komersial, 
                 dengan berbagai gaya dan pendekatan desain.
               </p>
             </motion.div>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10 mb-16">
               {[
                 {
                   id: 1,
                   title: "Modern House Project",
-                  category: "Residential Design",
+                  category: "Residensial",
+                  description: "Desain rumah modern dengan fokus pada pencahayaan alami dan ruang terbuka",
                   image: "https://images.unsplash.com/photo-1600585154526-990dced4db0d"
                 },
                 {
                   id: 2,
                   title: "Minimalist Interior",
-                  category: "Interior Design",
+                  category: "Desain Interior",
+                  description: "Pendekatan minimalis dengan palet warna netral dan furnitur fungsional",
                   image: "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea"
                 },
                 {
                   id: 3,
                   title: "Commercial Space",
-                  category: "Commercial Design",
+                  category: "Komersial",
+                  description: "Ruang komersial dengan desain yang mengutamakan produktivitas dan branding",
                   image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c"
                 }
               ].map((project, index) => (
                 <motion.div 
                   key={project.id}
-                  className="group rounded-lg overflow-hidden shadow-lg"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
+                  className="group project-card rounded-xl overflow-hidden"
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  transition={{ 
+                    duration: 0.7, 
+                    delay: index * 0.15,
+                    type: "spring",
+                    stiffness: 50
+                  }}
+                  whileHover={{ y: -10 }}
                 >
                   <Link href={`/project/${project.id}`}>
-                    <div className="cursor-pointer">
-                      <img 
-                        src={project.image} 
-                        alt={project.title} 
-                        className="w-full h-64 object-cover"
-                      />
-                      <div className="p-6">
-                        <h3 className="font-serif font-bold text-xl mb-2">{project.title}</h3>
-                        <p className="text-sm text-gray-500">{project.category}</p>
+                    <div className="cursor-pointer relative h-full flex flex-col">
+                      <div className="relative overflow-hidden h-[300px]">
+                        {/* Main image with overlay */}
+                        <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"></div>
+                        <motion.img 
+                          src={project.image} 
+                          alt={project.title} 
+                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                          initial={{ scale: 1.1 }}
+                          animate={{ scale: 1 }}
+                          transition={{ duration: 0.7 }}
+                        />
+                        
+                        {/* Hover overlay with category tag */}
+                        <div className="absolute top-6 left-6 z-20">
+                          <motion.span 
+                            className="inline-block px-4 py-1.5 bg-white/90 backdrop-blur-sm text-sm font-medium rounded-full"
+                            initial={{ opacity: 0, x: -20 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
+                          >
+                            {project.category}
+                          </motion.span>
+                        </div>
+                        
+                        {/* Call to action on hover */}
+                        <motion.div 
+                          className="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black/80 to-transparent text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-20 translate-y-6 group-hover:translate-y-0 transition-transform duration-500"
+                        >
+                          <p className="text-lg font-medium">Lihat Detail</p>
+                        </motion.div>
+                      </div>
+                      
+                      {/* Content below image */}
+                      <div className="p-6 bg-white flex-grow flex flex-col">
+                        <h3 className="font-bold text-xl mb-2 group-hover:text-[#FFD700] transition-colors duration-300">
+                          {project.title}
+                        </h3>
+                        <p className="text-[#4A4A4A] mb-4 line-clamp-2">
+                          {project.description}
+                        </p>
+                        <div className="mt-auto pt-4 flex items-center border-t border-gray-100">
+                          <span className="text-sm font-medium text-[#4A4A4A] mr-2">Lihat Detail</span>
+                          <motion.div
+                            className="text-[#FFD700]"
+                            initial={{ x: 0 }}
+                            whileHover={{ x: 4 }}
+                            transition={{ duration: 0.2 }}
+                          >
+                            <ArrowRight size={16} />
+                          </motion.div>
+                        </div>
                       </div>
                     </div>
                   </Link>
@@ -126,16 +193,21 @@ export default function Home() {
             </div>
             
             <motion.div 
-              className="text-center"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
+              className="text-center relative z-20"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.4 }}
             >
               <Link href="/projects">
-                <Button className="bg-[#FFD700] text-[#333333] font-medium py-3 px-8 rounded hover:bg-[#FFD700]/90 transition-colors">
+                <motion.button
+                  whileHover={{ scale: 1.05, boxShadow: "0 10px 25px rgba(0,0,0,0.1)" }}
+                  whileTap={{ scale: 0.98 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                  className="bg-[#FFD700] text-[#333333] font-medium py-4 px-10 rounded-md shadow-md hover:bg-[#FFD700]/90 transition-colors"
+                >
                   Lihat Semua Proyek
-                </Button>
+                </motion.button>
               </Link>
             </motion.div>
           </div>
