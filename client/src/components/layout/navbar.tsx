@@ -1,24 +1,48 @@
 import { useState, useEffect } from "react";
-import { Link } from "wouter";
-import { Menu, X } from "lucide-react";
+import { Link, useLocation } from "wouter";
+import { Menu, X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface NavItem {
   label: string;
   href: string;
+  children?: NavChild[];
+}
+
+interface NavChild {
+  label: string;
+  href: string;
 }
 
 const navItems: NavItem[] = [
-  { label: "Beranda", href: "#beranda" },
-  { label: "Tentang Kami", href: "#tentang-kami" },
-  { label: "Proyek", href: "#proyek" },
-  { label: "Layanan", href: "#layanan" },
-  { label: "Kontak", href: "#kontak" }
+  { label: "Beranda", href: "/" },
+  { 
+    label: "Tentang Kami", 
+    href: "/about",
+    children: [
+      { label: "Tentang Kami", href: "/about" },
+      { label: "Tim Kami", href: "/team" }
+    ]
+  },
+  { label: "Proyek", href: "/projects" },
+  { 
+    label: "Layanan", 
+    href: "/services",
+    children: [
+      { label: "Semua Layanan", href: "/services" },
+      { label: "Desain Interior & Eksterior", href: "/service/interior-exterior" },
+      { label: "Konstruksi", href: "/service/construction" },
+      { label: "Furniture", href: "/service/furniture" }
+    ]
+  },
+  { label: "Kontak", href: "/contact" }
 ];
 
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState<string | null>(null);
+  const [location] = useLocation();
 
   // Handle scroll event to change navbar appearance
   useEffect(() => {
@@ -36,22 +60,28 @@ export function Navbar() {
     };
   }, []);
 
-  // Handle smooth scrolling for anchor links
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    e.preventDefault();
-    
-    if (href.startsWith("#")) {
-      const targetElement = document.querySelector(href);
-      if (targetElement) {
-        window.scrollTo({
-          top: targetElement.offsetTop - 80, // Adjust for fixed header
-          behavior: "smooth"
-        });
-      }
-      
-      // Close mobile menu after clicking
-      setMobileMenuOpen(false);
+  // Handle dropdown toggle
+  const toggleDropdown = (label: string) => {
+    if (dropdownOpen === label) {
+      setDropdownOpen(null);
+    } else {
+      setDropdownOpen(label);
     }
+  };
+
+  // Close mobile menu after navigation
+  const closeMenu = () => {
+    setMobileMenuOpen(false);
+    setDropdownOpen(null);
+  };
+
+  // Check if a nav item or its children are active
+  const isActive = (item: NavItem) => {
+    if (location === item.href) return true;
+    if (item.children) {
+      return item.children.some(child => location === child.href);
+    }
+    return false;
   };
 
   return (
@@ -71,14 +101,53 @@ export function Navbar() {
           <div className="hidden md:block">
             <div className="ml-10 flex items-center space-x-8">
               {navItems.map((item) => (
-                <a
-                  key={item.label}
-                  href={item.href}
-                  className="font-medium hover:text-[#FFD700] transition-colors"
-                  onClick={(e) => handleNavClick(e, item.href)}
-                >
-                  {item.label}
-                </a>
+                <div key={item.label} className="relative group">
+                  {item.children ? (
+                    <>
+                      <button
+                        className={`flex items-center font-medium transition-colors ${
+                          isActive(item) ? "text-[#FFD700]" : "hover:text-[#FFD700]"
+                        }`}
+                        onClick={() => toggleDropdown(item.label)}
+                        onMouseEnter={() => setDropdownOpen(item.label)}
+                        onMouseLeave={() => setDropdownOpen(null)}
+                      >
+                        {item.label}
+                        <ChevronDown className="w-4 h-4 ml-1" />
+                      </button>
+                      
+                      <div
+                        className={`absolute left-0 mt-2 w-60 bg-white shadow-lg rounded-md overflow-hidden z-20 transition-all duration-300 ${
+                          dropdownOpen === item.label ? "opacity-100 visible" : "opacity-0 invisible"
+                        }`}
+                        onMouseEnter={() => setDropdownOpen(item.label)}
+                        onMouseLeave={() => setDropdownOpen(null)}
+                      >
+                        <div className="py-2">
+                          {item.children.map((child) => (
+                            <Link
+                              key={child.label}
+                              href={child.href}
+                              onClick={closeMenu}
+                            >
+                              <a className={`block px-4 py-2 hover:bg-gray-100 ${location === child.href ? "text-[#FFD700]" : ""}`}>
+                                {child.label}
+                              </a>
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <Link href={item.href}>
+                      <a className={`font-medium transition-colors ${
+                        location === item.href ? "text-[#FFD700]" : "hover:text-[#FFD700]"
+                      }`}>
+                        {item.label}
+                      </a>
+                    </Link>
+                  )}
+                </div>
               ))}
             </div>
           </div>
@@ -106,14 +175,54 @@ export function Navbar() {
       <div className={`md:hidden ${mobileMenuOpen ? "block" : "hidden"} bg-white border-t`}>
         <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
           {navItems.map((item) => (
-            <a
-              key={item.label}
-              href={item.href}
-              className="block px-3 py-2 font-medium hover:text-[#FFD700] transition-colors"
-              onClick={(e) => handleNavClick(e, item.href)}
-            >
-              {item.label}
-            </a>
+            <div key={item.label}>
+              {item.children ? (
+                <>
+                  <button
+                    className={`flex items-center w-full text-left px-3 py-2 font-medium ${
+                      isActive(item) ? "text-[#FFD700]" : "hover:text-[#FFD700]"
+                    } transition-colors`}
+                    onClick={() => toggleDropdown(item.label)}
+                  >
+                    {item.label}
+                    <ChevronDown className={`w-4 h-4 ml-2 transition-transform ${
+                      dropdownOpen === item.label ? "rotate-180" : ""
+                    }`} />
+                  </button>
+                  
+                  <div
+                    className={`pl-4 space-y-1 overflow-hidden transition-all ${
+                      dropdownOpen === item.label ? "max-h-96" : "max-h-0"
+                    }`}
+                  >
+                    {item.children.map((child) => (
+                      <Link
+                        key={child.label}
+                        href={child.href}
+                        onClick={closeMenu}
+                      >
+                        <a className={`block px-3 py-2 text-sm font-medium ${
+                          location === child.href ? "text-[#FFD700]" : "hover:text-[#FFD700]"
+                        } transition-colors`}>
+                          {child.label}
+                        </a>
+                      </Link>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <Link
+                  href={item.href}
+                  onClick={closeMenu}
+                >
+                  <a className={`block px-3 py-2 font-medium ${
+                    location === item.href ? "text-[#FFD700]" : "hover:text-[#FFD700]"
+                  } transition-colors`}>
+                    {item.label}
+                  </a>
+                </Link>
+              )}
+            </div>
           ))}
         </div>
       </div>
