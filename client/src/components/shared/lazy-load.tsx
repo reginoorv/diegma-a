@@ -8,6 +8,8 @@ interface LazyLoadProps {
   placeholder?: ReactNode;
   skipLazyLoad?: boolean;
   onVisible?: () => void;
+  height?: string | number;
+  className?: string;
 }
 
 export function LazyLoad({
@@ -16,27 +18,39 @@ export function LazyLoad({
   rootMargin = '100px 0px',
   placeholder,
   skipLazyLoad = false,
-  onVisible
+  onVisible,
+  height = 'auto',
+  className = ''
 }: LazyLoadProps) {
   const [shouldRender, setShouldRender] = useState(skipLazyLoad);
   const containerRef = useRef<HTMLDivElement>(null);
   
-  const { isIntersecting } = useIntersectionObserver(containerRef, {
+  const result = useIntersectionObserver(containerRef, {
     threshold,
     rootMargin,
     freezeOnceVisible: true,
   });
 
   useEffect(() => {
-    if (isIntersecting && !shouldRender) {
+    if (result.isIntersecting && !shouldRender) {
       setShouldRender(true);
       onVisible?.();
     }
-  }, [isIntersecting, shouldRender, onVisible]);
+  }, [result.isIntersecting, shouldRender, onVisible]);
+
+  // Default placeholder with adjustable height
+  const defaultPlaceholder = (
+    <div 
+      className="animate-pulse bg-gray-200 rounded-lg w-full" 
+      style={{ 
+        height: typeof height === 'number' ? `${height}px` : height 
+      }}
+    ></div>
+  );
 
   return (
-    <div ref={containerRef}>
-      {shouldRender ? children : placeholder || <div className="animate-pulse bg-gray-200 w-full h-40 rounded-lg"></div>}
+    <div ref={containerRef} className={className}>
+      {shouldRender ? children : placeholder || defaultPlaceholder}
     </div>
   );
 }

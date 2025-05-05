@@ -4,6 +4,11 @@ interface UseIntersectionObserverOptions extends IntersectionObserverInit {
   freezeOnceVisible?: boolean;
 }
 
+interface IntersectionResult {
+  isIntersecting: boolean;
+  entry?: IntersectionObserverEntry;
+}
+
 export function useIntersectionObserver(
   elementRef: RefObject<Element>,
   {
@@ -12,8 +17,11 @@ export function useIntersectionObserver(
     rootMargin = '0%',
     freezeOnceVisible = true,
   }: UseIntersectionObserverOptions = {},
-): boolean {
-  const [isIntersecting, setIsIntersecting] = useState<boolean>(false);
+): IntersectionResult {
+  const [result, setResult] = useState<IntersectionResult>({
+    isIntersecting: false,
+    entry: undefined
+  });
 
   useEffect(() => {
     const element = elementRef?.current;
@@ -22,7 +30,10 @@ export function useIntersectionObserver(
     const observer = new IntersectionObserver(
       ([entry]) => {
         const isElementIntersecting = entry.isIntersecting;
-        setIsIntersecting(isElementIntersecting);
+        setResult({
+          isIntersecting: isElementIntersecting,
+          entry
+        });
 
         if (freezeOnceVisible && isElementIntersecting) {
           observer.disconnect();
@@ -38,5 +49,5 @@ export function useIntersectionObserver(
     };
   }, [elementRef, threshold, root, rootMargin, freezeOnceVisible]);
 
-  return isIntersecting;
+  return result;
 }
