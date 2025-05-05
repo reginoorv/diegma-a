@@ -214,72 +214,162 @@ export default function Home() {
         </section>
         
         {/* Services preview section */}
-        <section className="py-16 bg-white">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <section className="relative py-24 overflow-hidden">
+          {/* Background gradients and decorative elements */}
+          <div className="absolute inset-0 bg-gradient-to-b from-gray-50 to-white z-0"></div>
+          <div className="absolute -left-40 top-40 w-80 h-80 bg-[#FFD700]/5 rounded-full blur-3xl z-0"></div>
+          <div className="absolute -right-40 bottom-0 w-80 h-80 bg-[#FFD700]/10 rounded-full blur-3xl z-0"></div>
+          
+          <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div 
-              className="text-center mb-12"
+              className="text-center mb-16"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
             >
-              <h2 className="text-3xl font-bold font-serif mb-4">Layanan Kami</h2>
-              <p className="text-[#4A4A4A] max-w-2xl mx-auto">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+              >
+                <h2 className="text-3xl md:text-4xl font-bold mb-6">Layanan Kami</h2>
+                <div className="w-24 h-1 bg-[#FFD700] mx-auto mb-8"></div>
+              </motion.div>
+              <p className="text-[#4A4A4A] max-w-2xl mx-auto text-lg">
                 Kami menawarkan berbagai layanan desain dan konstruksi untuk memenuhi kebutuhan proyek Anda, 
                 dari konsep awal hingga implementasi akhir.
               </p>
             </motion.div>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
               {[
                 {
                   id: "interior-exterior",
                   title: "Desain Interior & Eksterior",
                   description: "Layanan desain komprehensif untuk menciptakan ruang yang fungsional, estetis, dan sesuai dengan kebutuhan Anda.",
-                  icon: <div className="w-16 h-16 bg-[#F8F8F8] rounded-full flex items-center justify-center mb-6 mx-auto">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#FFD700]"><path d="m5 3 4 2 3-2 4 2 4-2v14l-4 2-4-2-3 2-4-2-4 2V3l4 2"></path><path d="M5 13v-1a2 2 0 0 1 4 0v1"></path></svg>
-                  </div>,
+                  image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c",
+                  icon: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white"><path d="m5 3 4 2 3-2 4 2 4-2v14l-4 2-4-2-3 2-4-2-4 2V3l4 2"></path><path d="M5 13v-1a2 2 0 0 1 4 0v1"></path></svg>,
+                  features: ["Desain Interior", "Desain Eksterior", "Space Planning", "Konsultasi Desain"]
                 },
                 {
                   id: "construction",
                   title: "Konstruksi",
                   description: "Implementasi proyek yang profesional dengan fokus pada kualitas, efisiensi, dan kepatuhan terhadap standar keamanan.",
-                  icon: <div className="w-16 h-16 bg-[#F8F8F8] rounded-full flex items-center justify-center mb-6 mx-auto">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#FFD700]"><path d="M2 18a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v2z"></path><path d="M10 10V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5"></path><path d="M4 15v-3a6 6 0 0 1 6-6h0"></path><path d="M14 6h0a6 6 0 0 1 6 6v3"></path></svg>
-                  </div>,
+                  image: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5",
+                  icon: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white"><path d="M2 18a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v2z"></path><path d="M10 10V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5"></path><path d="M4 15v-3a6 6 0 0 1 6-6h0"></path><path d="M14 6h0a6 6 0 0 1 6 6v3"></path></svg>,
+                  features: ["Renovasi", "Pembangunan Baru", "Manajemen Proyek", "Konsultasi Teknis"]
                 },
                 {
                   id: "furniture",
                   title: "Furniture",
                   description: "Desain dan produksi furniture custom yang menggabungkan estetika, fungsionalitas, dan kualitas terbaik.",
-                  icon: <div className="w-16 h-16 bg-[#F8F8F8] rounded-full flex items-center justify-center mb-6 mx-auto">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#FFD700]"><path d="M20 10V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3"></path><path d="M20 14v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-3"></path><path d="M4 10h16"></path><path d="M4 14h16"></path></svg>
-                  </div>,
+                  image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc",
+                  icon: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white"><path d="M20 10V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3"></path><path d="M20 14v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-3"></path><path d="M4 10h16"></path><path d="M4 14h16"></path></svg>,
+                  features: ["Furniture Custom", "Restorasi", "Konsultasi Furniture", "Produksi"]
                 }
               ].map((service, index) => (
                 <motion.div 
                   key={service.id}
-                  className="bg-white rounded-lg shadow-md p-6 border-t-4 border-[#FFD700] hover:-translate-y-2 hover:shadow-lg transition-all duration-300"
-                  initial={{ opacity: 0, y: 20 }}
+                  className="group bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300"
+                  initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.2 }}
+                  transition={{ duration: 0.7, delay: index * 0.2 }}
+                  whileHover={{ y: -10 }}
                 >
-                  {service.icon}
-                  <h3 className="text-xl font-bold font-serif text-center mb-4">{service.title}</h3>
-                  <p className="text-[#4A4A4A] text-center mb-6">
-                    {service.description}
-                  </p>
-                  <div className="text-center">
+                  {/* Image section with overlay and icon */}
+                  <div className="relative h-52 overflow-hidden">
+                    {/* Image with overlay effect */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-black/20 opacity-60 group-hover:opacity-70 transition-opacity duration-300 z-10"></div>
+                    <motion.img 
+                      src={service.image} 
+                      alt={service.title} 
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
+                    
+                    {/* Icon positioned on the image */}
+                    <div className="absolute top-0 left-0 w-full h-full z-20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <motion.div
+                        initial={{ scale: 0.8 }}
+                        whileInView={{ scale: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.5, delay: 0.2 }}
+                        className="w-16 h-16 bg-[#FFD700] rounded-full flex items-center justify-center shadow-lg"
+                      >
+                        {service.icon}
+                      </motion.div>
+                    </div>
+                    
+                    {/* Title overlay */}
+                    <div className="absolute bottom-0 left-0 w-full p-6 z-20">
+                      <h3 className="text-xl font-bold text-white">
+                        {service.title}
+                      </h3>
+                    </div>
+                  </div>
+                  
+                  {/* Content section */}
+                  <div className="p-6">
+                    <p className="text-[#4A4A4A] mb-6">
+                      {service.description}
+                    </p>
+                    
+                    {/* Features list */}
+                    <ul className="space-y-2 mb-6">
+                      {service.features.map((feature, i) => (
+                        <motion.li 
+                          key={i}
+                          className="flex items-center text-sm"
+                          initial={{ opacity: 0, x: -10 }}
+                          whileInView={{ opacity: 1, x: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.3, delay: 0.4 + (i * 0.1) }}
+                        >
+                          <span className="w-2 h-2 bg-[#FFD700] rounded-full mr-2"></span>
+                          {feature}
+                        </motion.li>
+                      ))}
+                    </ul>
+                    
+                    {/* Action button */}
                     <Link href={`/service/${service.id}`}>
-                      <Button variant="link" className="p-0 h-auto font-medium text-black hover:text-[#FFD700] transition-colors">
-                        Pelajari Lebih Lanjut <ArrowRight className="w-4 h-4 ml-2" />
-                      </Button>
+                      <motion.div
+                        className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100"
+                        whileHover={{ x: 5 }}
+                        transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                      >
+                        <span className="font-medium">Lihat Selengkapnya</span>
+                        <div className="w-8 h-8 bg-[#f8f8f8] rounded-full flex items-center justify-center group-hover:bg-[#FFD700] transition-colors duration-300">
+                          <ArrowRight className="w-4 h-4 text-gray-700 group-hover:text-[#111] transition-colors duration-300" />
+                        </div>
+                      </motion.div>
                     </Link>
                   </div>
                 </motion.div>
               ))}
             </div>
+            
+            {/* View all services button */}
+            <motion.div 
+              className="text-center mt-16"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+            >
+              <Link href="/services">
+                <motion.button
+                  whileHover={{ scale: 1.05, boxShadow: "0 10px 25px rgba(0,0,0,0.1)" }}
+                  whileTap={{ scale: 0.98 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                  className="bg-[#FFD700] text-[#333333] font-medium py-4 px-10 rounded-md shadow-md hover:bg-[#FFD700]/90 transition-colors"
+                >
+                  Lihat Semua Layanan
+                </motion.button>
+              </Link>
+            </motion.div>
           </div>
         </section>
         
