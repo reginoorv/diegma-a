@@ -4,6 +4,11 @@ import { motion } from "framer-motion";
 import { Link, useParams } from "wouter";
 import { ArrowLeft, ChevronRight, Check, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SEO } from "@/components/shared/seo";
+import { OptimizedImage } from "@/components/shared/optimized-image";
+import { LazyLoad } from "@/components/shared/lazy-load";
+import { useEffect, useRef } from "react";
+import { generateProductSchema, generateBreadcrumbSchema } from "@/lib/seo";
 
 // Project types for filtering
 type ProjectType = "all" | "residential" | "commercial" | "interior";
@@ -196,8 +201,16 @@ export default function ProjectDetailPage() {
   const params = useParams();
   const projectId = parseInt(params.id as string);
   
+  // Ref for the content section to track visibility
+  const contentRef = useRef<HTMLDivElement>(null);
+  
   // Find the project by ID
   const project = projects.find(p => p.id === projectId);
+  
+  // Scroll to top on page load or when projectId changes
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [projectId]);
   
   // If project not found, show error
   if (!project) {
@@ -242,12 +255,37 @@ export default function ProjectDetailPage() {
     .filter(p => p.type === project.type && p.id !== project.id)
     .slice(0, 3);
 
+  // Generate structured data for SEO
+  const structuredData = generateProductSchema({
+    name: project.title,
+    description: project.description,
+    image: project.image,
+    price: '',
+    url: `https://www.diegma.com/project/${project.id}`,
+    brand: 'DIEGMA'
+  });
+  
+  // Generate breadcrumb schema for SEO
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: 'Beranda', url: 'https://www.diegma.com/' },
+    { name: 'Proyek', url: 'https://www.diegma.com/projects' },
+    { name: project.title, url: `https://www.diegma.com/project/${project.id}` },
+  ]);
+
   return (
     <div className="min-h-screen">
+      {/* SEO Implementation */}
+      <SEO 
+        title={`${project.title} - ${project.category}`}
+        description={project.description}
+        ogImage={project.image}
+        structuredData={`[${structuredData},${breadcrumbSchema}]`}
+      />
+      
       <Navbar />
       <main>
         {/* Hero section with parallax effect */}
-        <section className="relative h-[70vh] md:h-[80vh] bg-cover bg-center bg-fixed overflow-hidden">
+        <section className="relative h-[70vh] md:h-[80vh] bg-cover bg-center overflow-hidden">
           <motion.div 
             className="absolute inset-0 bg-black/40 z-10"
             initial={{ opacity: 0 }}
@@ -261,10 +299,13 @@ export default function ProjectDetailPage() {
             animate={{ scale: 1 }}
             transition={{ duration: 1.5 }}
           >
-            <img 
+            <OptimizedImage 
               src={project.image} 
-              alt={project.title} 
-              className="w-full h-full object-cover"
+              alt={project.title}
+              fill={true}
+              priority={true}
+              quality={90}
+              objectFit="cover"
             />
           </motion.div>
           
@@ -277,7 +318,7 @@ export default function ProjectDetailPage() {
               >
                 <Link href="/projects">
                   <motion.div 
-                    className="inline-flex items-center text-white hover:text-[#FFD700] mb-6 transition-colors cursor-pointer"
+                    className="inline-flex items-center text-white hover:text-[#FFD700] mb-6 transition-colors cursor-pointer touch-target"
                     whileHover={{ x: -5 }}
                     transition={{ type: "spring", stiffness: 400 }}
                   >
@@ -287,7 +328,7 @@ export default function ProjectDetailPage() {
                 </Link>
                 
                 <motion.h1 
-                  className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4"
+                  className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 text-responsive-xl"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.7, delay: 0.3 }}
@@ -336,277 +377,307 @@ export default function ProjectDetailPage() {
         </section>
         
         {/* Project details */}
-        <section className="py-20 relative overflow-hidden">
+        <section className="py-20 relative overflow-hidden cv-auto">
           <div className="absolute top-0 left-0 w-full h-20 bg-gradient-to-b from-black/20 to-transparent z-0"></div>
           <div className="absolute -top-40 -left-40 w-80 h-80 bg-[#FFD700]/5 rounded-full blur-3xl z-0"></div>
           <div className="absolute -bottom-40 -right-40 w-80 h-80 bg-[#FFD700]/5 rounded-full blur-3xl z-0"></div>
           
           <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-16">
-              <motion.div 
-                className="lg:col-span-2"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.7 }}
-              >
-                <div className="mb-12">
-                  <h2 className="text-3xl font-bold mb-4">Tentang Proyek</h2>
-                  <div className="w-16 h-1 bg-[#FFD700] mb-8"></div>
-                  <p className="text-[#4A4A4A] text-lg mb-8 leading-relaxed">
-                    {project.fullDescription}
-                  </p>
-                </div>
-                
-                <div className="mb-12">
-                  <h3 className="text-2xl font-bold mb-6">Fitur Utama</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {project.features.map((feature, index) => (
-                      <motion.div 
-                        key={index} 
-                        className="flex items-start p-4 bg-gray-50 rounded-lg hover:bg-[#FFFBEA] transition-colors"
-                        initial={{ opacity: 0, y: 10 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.5, delay: 0.1 * index }}
-                        whileHover={{ x: 5 }}
-                      >
-                        <div className="w-8 h-8 bg-[#FFD700] rounded-full flex items-center justify-center flex-shrink-0 mr-4">
-                          <Check className="w-4 h-4 text-white" />
-                        </div>
-                        <span className="text-[#4A4A4A]">{feature}</span>
-                      </motion.div>
-                    ))}
-                  </div>
-                </div>
-                
-                <div className="mb-12">
-                  <h3 className="text-2xl font-bold mb-6">Galeri Proyek</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-                    {project.gallery.map((image, index) => (
-                      <motion.div
-                        key={index}
-                        className="rounded-xl overflow-hidden shadow-lg group relative"
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.6, delay: index * 0.15 }}
-                        whileHover={{ y: -5 }}
-                      >
-                        <div className="relative overflow-hidden aspect-[4/3]">
-                          {/* Overlay effect on hover */}
-                          <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 flex items-center justify-center">
-                            <motion.div 
-                              className="px-6 py-3 border border-white rounded-full text-white"
-                              initial={{ scale: 0.8, opacity: 0 }}
-                              whileInView={{ scale: 1, opacity: 1 }}
-                              viewport={{ once: true }}
-                              transition={{ duration: 0.3, delay: 0.1 }}
-                            >
-                              Lihat Detail
-                            </motion.div>
-                          </div>
-                          
-                          {/* Image with zoom effect */}
-                          <img 
-                            src={image} 
-                            alt={`${project.title} gallery ${index + 1}`} 
-                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                          />
-                        </div>
-                      </motion.div>
-                    ))}
-                  </div>
-                </div>
-                
-                <motion.div 
-                  className="bg-gradient-to-br from-gray-900 to-gray-800 text-white p-8 md:p-10 rounded-2xl shadow-xl"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.7 }}
-                >
-                  <div className="flex flex-col md:flex-row md:items-center gap-6">
-                    <div className="flex-grow">
-                      <h3 className="text-2xl font-bold mb-3">Tertarik dengan proyek ini?</h3>
-                      <p className="text-gray-300 mb-6 md:mb-0">
-                        Konsultasikan kebutuhan Anda dengan tim kami dan temukan solusi desain yang tepat untuk Anda.
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-16">
+              <div ref={contentRef} className="lg:col-span-2">
+                <LazyLoad>
+                  <motion.div 
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.7 }}
+                  >
+                    <div className="mb-12">
+                      <h2 className="text-3xl font-bold mb-4 text-responsive-lg">Tentang Proyek</h2>
+                      <div className="w-16 h-1 bg-[#FFD700] mb-8"></div>
+                      <p className="text-[#4A4A4A] text-lg mb-8 leading-relaxed">
+                        {project.fullDescription}
                       </p>
                     </div>
-                    <div className="flex-shrink-0">
-                      <Link href="/contact">
-                        <motion.button
-                          className="bg-[#FFD700] text-[#333333] font-medium py-3 px-8 rounded-lg hover:bg-[#FFD700]/90 transition-colors shadow-lg"
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
+                    
+                    <div className="mb-12">
+                      <h3 className="text-2xl font-bold mb-6 text-responsive-md">Fitur Utama</h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {project.features.map((feature, index) => (
+                          <motion.div 
+                            key={index} 
+                            className="flex items-start p-4 bg-gray-50 rounded-lg hover:bg-[#FFFBEA] transition-colors"
+                            initial={{ opacity: 0, y: 10 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.5, delay: 0.1 * index }}
+                            whileHover={{ x: 5 }}
+                          >
+                            <div className="w-8 h-8 bg-[#FFD700] rounded-full flex items-center justify-center flex-shrink-0 mr-4">
+                              <Check className="w-4 h-4 text-white" />
+                            </div>
+                            <span className="text-[#4A4A4A]">{feature}</span>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </div>
+                  </motion.div>
+                </LazyLoad>
+                
+                <LazyLoad>
+                  <div className="mb-12">
+                    <motion.h3 
+                      className="text-2xl font-bold mb-6 text-responsive-md"
+                      initial={{ opacity: 0, y: 10 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                    >
+                      Galeri Proyek
+                    </motion.h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+                      {project.gallery.map((image, index) => (
+                        <motion.div
+                          key={index}
+                          className="rounded-xl overflow-hidden shadow-lg group relative"
+                          initial={{ opacity: 0, y: 20 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.6, delay: index * 0.15 }}
+                          whileHover={{ y: -5 }}
                         >
-                          Hubungi Kami
-                        </motion.button>
+                          <div className="relative overflow-hidden aspect-4-3">
+                            {/* Overlay effect on hover */}
+                            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 flex items-center justify-center">
+                              <motion.div 
+                                className="px-6 py-3 border border-white rounded-full text-white"
+                                initial={{ scale: 0.8, opacity: 0 }}
+                                whileInView={{ scale: 1, opacity: 1 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.3, delay: 0.1 }}
+                              >
+                                Lihat Detail
+                              </motion.div>
+                            </div>
+                            
+                            {/* Optimized image with zoom effect */}
+                            <OptimizedImage 
+                              src={image} 
+                              alt={`${project.title} gallery ${index + 1}`}
+                              className="transition-transform duration-700 group-hover:scale-110 w-full h-full"
+                              objectFit="cover"
+                              fill={true}
+                              quality={75}
+                              useSrcSet={true}
+                              rounded={true}
+                              generateBlurPlaceholder={true}
+                            />
+                          </div>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </div>
+                </LazyLoad>
+                
+                <LazyLoad>
+                  <motion.div 
+                    className="bg-gradient-to-br from-gray-900 to-gray-800 text-white p-8 md:p-10 rounded-2xl shadow-xl"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.7 }}
+                  >
+                    <div className="flex flex-col md:flex-row md:items-center gap-6">
+                      <div className="flex-grow">
+                        <h3 className="text-2xl font-bold mb-3 text-responsive-md">Tertarik dengan proyek ini?</h3>
+                        <p className="text-gray-300 mb-6 md:mb-0">
+                          Konsultasikan kebutuhan Anda dengan tim kami dan temukan solusi desain yang tepat untuk Anda.
+                        </p>
+                      </div>
+                      <div className="flex-shrink-0">
+                        <Link href="/contact">
+                          <motion.button
+                            className="bg-[#FFD700] text-[#333333] font-medium py-3 px-8 rounded-lg hover:bg-[#FFD700]/90 transition-colors shadow-lg touch-target"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                          >
+                            Hubungi Kami
+                          </motion.button>
+                        </Link>
+                      </div>
+                    </div>
+                  </motion.div>
+                </LazyLoad>
+              </div>
+              
+              <LazyLoad>
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.7, delay: 0.2 }}
+                  className="self-start"
+                >
+                  <div className="bg-white p-8 rounded-xl shadow-lg sticky top-24">
+                    <h3 className="text-2xl font-bold mb-6 text-responsive-md">Informasi Proyek</h3>
+                    <div className="w-12 h-1 bg-[#FFD700] mb-8"></div>
+                    
+                    <div className="space-y-6">
+                      <div className="bg-gray-50 p-4 rounded-lg hover:bg-[#FFFBEA] transition-colors">
+                        <p className="text-sm text-gray-500 mb-1">Kategori</p>
+                        <p className="font-medium">{project.category}</p>
+                      </div>
+                      
+                      <div className="bg-gray-50 p-4 rounded-lg hover:bg-[#FFFBEA] transition-colors">
+                        <p className="text-sm text-gray-500 mb-1">Lokasi</p>
+                        <p className="font-medium">{project.location}</p>
+                      </div>
+                      
+                      <div className="bg-gray-50 p-4 rounded-lg hover:bg-[#FFFBEA] transition-colors">
+                        <p className="text-sm text-gray-500 mb-1">Tahun</p>
+                        <p className="font-medium">{project.year}</p>
+                      </div>
+                      
+                      <div className="bg-gray-50 p-4 rounded-lg hover:bg-[#FFFBEA] transition-colors">
+                        <p className="text-sm text-gray-500 mb-1">Klien</p>
+                        <p className="font-medium">{project.client}</p>
+                      </div>
+                      
+                      <div className="bg-gray-50 p-4 rounded-lg hover:bg-[#FFFBEA] transition-colors">
+                        <p className="text-sm text-gray-500 mb-1">Luas</p>
+                        <p className="font-medium">{project.area}</p>
+                      </div>
+                      
+                      <div className="bg-gray-50 p-4 rounded-lg hover:bg-[#FFFBEA] transition-colors">
+                        <p className="text-sm text-gray-500 mb-1">Arsitek</p>
+                        <p className="font-medium">{project.architect}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="mt-8 pt-6 border-t border-gray-100">
+                      <Link href="/projects">
+                        <motion.div
+                          className="inline-flex items-center text-[#333] font-medium hover:text-[#FFD700] transition-colors cursor-pointer touch-target"
+                          whileHover={{ x: -5 }}
+                          transition={{ type: "spring", stiffness: 400 }}
+                        >
+                          <ArrowLeft className="w-4 h-4 mr-2" />
+                          Kembali ke Semua Proyek
+                        </motion.div>
                       </Link>
                     </div>
                   </div>
                 </motion.div>
-              </motion.div>
-              
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.7, delay: 0.2 }}
-              >
-                <div className="bg-white p-8 rounded-xl shadow-lg sticky top-24">
-                  <h3 className="text-2xl font-bold mb-6">Informasi Proyek</h3>
-                  <div className="w-12 h-1 bg-[#FFD700] mb-8"></div>
-                  
-                  <div className="space-y-6">
-                    <div className="bg-gray-50 p-4 rounded-lg hover:bg-[#FFFBEA] transition-colors">
-                      <p className="text-sm text-gray-500 mb-1">Kategori</p>
-                      <p className="font-medium">{project.category}</p>
-                    </div>
-                    
-                    <div className="bg-gray-50 p-4 rounded-lg hover:bg-[#FFFBEA] transition-colors">
-                      <p className="text-sm text-gray-500 mb-1">Lokasi</p>
-                      <p className="font-medium">{project.location}</p>
-                    </div>
-                    
-                    <div className="bg-gray-50 p-4 rounded-lg hover:bg-[#FFFBEA] transition-colors">
-                      <p className="text-sm text-gray-500 mb-1">Tahun</p>
-                      <p className="font-medium">{project.year}</p>
-                    </div>
-                    
-                    <div className="bg-gray-50 p-4 rounded-lg hover:bg-[#FFFBEA] transition-colors">
-                      <p className="text-sm text-gray-500 mb-1">Klien</p>
-                      <p className="font-medium">{project.client}</p>
-                    </div>
-                    
-                    <div className="bg-gray-50 p-4 rounded-lg hover:bg-[#FFFBEA] transition-colors">
-                      <p className="text-sm text-gray-500 mb-1">Luas</p>
-                      <p className="font-medium">{project.area}</p>
-                    </div>
-                    
-                    <div className="bg-gray-50 p-4 rounded-lg hover:bg-[#FFFBEA] transition-colors">
-                      <p className="text-sm text-gray-500 mb-1">Arsitek</p>
-                      <p className="font-medium">{project.architect}</p>
-                    </div>
-                  </div>
-                  
-                  <div className="mt-8 pt-6 border-t border-gray-100">
-                    <Link href="/projects">
-                      <motion.div
-                        className="inline-flex items-center text-[#333] font-medium hover:text-[#FFD700] transition-colors cursor-pointer"
-                        whileHover={{ x: -5 }}
-                        transition={{ type: "spring", stiffness: 400 }}
-                      >
-                        <ArrowLeft className="w-4 h-4 mr-2" />
-                        Kembali ke Semua Proyek
-                      </motion.div>
-                    </Link>
-                  </div>
-                </div>
-              </motion.div>
+              </LazyLoad>
             </div>
           </div>
         </section>
         
         {/* Related projects */}
         {relatedProjects.length > 0 && (
-          <section className="py-24 bg-gray-50 relative overflow-hidden">
+          <section className="py-24 bg-gray-50 relative overflow-hidden cv-auto">
             <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#FFD700]/5 rounded-full blur-3xl z-0"></div>
             <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#FFD700]/5 rounded-full blur-3xl z-0"></div>
             
             <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.7 }}
-                className="text-center mb-16"
-              >
-                <h2 className="text-3xl font-bold mb-4">Proyek Terkait</h2>
-                <div className="w-24 h-1 bg-[#FFD700] mx-auto mb-8"></div>
-                <p className="text-[#4A4A4A] max-w-xl mx-auto">
-                  Jelajahi proyek lain yang serupa dengan {project.title}
-                </p>
-              </motion.div>
+              <LazyLoad>
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.7 }}
+                  className="text-center mb-16"
+                >
+                  <h2 className="text-3xl font-bold mb-4 text-responsive-lg">Proyek Terkait</h2>
+                  <div className="w-24 h-1 bg-[#FFD700] mx-auto mb-8"></div>
+                  <p className="text-[#4A4A4A] max-w-xl mx-auto">
+                    Jelajahi proyek lain yang serupa dengan {project.title}
+                  </p>
+                </motion.div>
+              </LazyLoad>
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10">
                 {relatedProjects.map((relatedProject, index) => (
-                  <motion.div
-                    key={relatedProject.id}
-                    className="group bg-white rounded-xl overflow-hidden shadow-lg"
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.7, delay: index * 0.15 }}
-                    whileHover={{ y: -10 }}
-                  >
-                    <Link href={`/project/${relatedProject.id}`}>
-                      <div className="cursor-pointer h-full flex flex-col">
-                        {/* Image container with effects */}
-                        <div className="relative overflow-hidden h-[250px]">
-                          {/* Gradient overlay for text readability */}
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-black/10 opacity-60 z-10"></div>
-                          
-                          {/* Image with zoom effect */}
-                          <motion.img 
-                            src={relatedProject.image} 
-                            alt={relatedProject.title} 
-                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                          />
-                          
-                          {/* Category badge */}
-                          <div className="absolute top-4 left-4 z-20">
-                            <motion.span 
-                              className="inline-block px-3 py-1.5 bg-white/90 backdrop-blur-sm text-sm font-medium rounded-full"
-                              initial={{ opacity: 0, x: -20 }}
-                              whileInView={{ opacity: 1, x: 0 }}
-                              viewport={{ once: true }}
-                              transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
-                            >
-                              {relatedProject.type === "residential" ? "Residensial" : 
-                               relatedProject.type === "commercial" ? "Komersial" : "Interior"}
-                            </motion.span>
-                          </div>
-                          
-                          {/* View project overlay */}
-                          <div className="absolute inset-0 bg-[#FFD700]/20 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 flex items-center justify-center">
-                            <div className="bg-white/90 backdrop-blur-md rounded-full p-3 transition-transform">
-                              <ArrowRight className="w-6 h-6 text-gray-800" />
+                  <LazyLoad key={relatedProject.id}>
+                    <motion.div
+                      className="group bg-white rounded-xl overflow-hidden shadow-lg h-full gpu"
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.7, delay: index * 0.15 }}
+                      whileHover={{ y: -10 }}
+                    >
+                      <Link href={`/project/${relatedProject.id}`}>
+                        <div className="cursor-pointer h-full flex flex-col">
+                          {/* Image container with effects */}
+                          <div className="relative overflow-hidden h-[250px]">
+                            {/* Gradient overlay for text readability */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-black/10 opacity-60 z-10"></div>
+                            
+                            {/* Optimized image with zoom effect */}
+                            <OptimizedImage 
+                              src={relatedProject.image} 
+                              alt={relatedProject.title}
+                              className="transition-transform duration-700 group-hover:scale-110"
+                              objectFit="cover"
+                              fill={true}
+                              quality={70}
+                              generateBlurPlaceholder={true}
+                            />
+                            
+                            {/* Category badge */}
+                            <div className="absolute top-4 left-4 z-20">
+                              <motion.span 
+                                className="inline-block px-3 py-1.5 bg-white/90 backdrop-blur-sm text-sm font-medium rounded-full"
+                                initial={{ opacity: 0, x: -20 }}
+                                whileInView={{ opacity: 1, x: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
+                              >
+                                {relatedProject.type === "residential" ? "Residensial" : 
+                                relatedProject.type === "commercial" ? "Komersial" : "Interior"}
+                              </motion.span>
+                            </div>
+                            
+                            {/* View project overlay */}
+                            <div className="absolute inset-0 bg-[#FFD700]/20 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 flex items-center justify-center">
+                              <div className="bg-white/90 backdrop-blur-md rounded-full p-3 transition-transform">
+                                <ArrowRight className="w-6 h-6 text-gray-800" />
+                              </div>
+                            </div>
+                            
+                            {/* Title overlay */}
+                            <div className="absolute bottom-0 left-0 w-full p-6 z-20">
+                              <h3 className="text-xl font-bold text-white mb-1">
+                                {relatedProject.title}
+                              </h3>
+                              <p className="text-white/80 text-sm">
+                                {relatedProject.location}, {relatedProject.year}
+                              </p>
                             </div>
                           </div>
                           
-                          {/* Title overlay */}
-                          <div className="absolute bottom-0 left-0 w-full p-6 z-20">
-                            <h3 className="text-xl font-bold text-white mb-1">
-                              {relatedProject.title}
-                            </h3>
-                            <p className="text-white/80 text-sm">
-                              {relatedProject.location}, {relatedProject.year}
+                          {/* Content */}
+                          <div className="p-6 flex-grow flex flex-col">
+                            <p className="text-[#4A4A4A] mb-6 line-clamp-2 flex-grow">
+                              {relatedProject.description}
                             </p>
+                            
+                            {/* Action link */}
+                            <motion.div
+                              className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100"
+                              whileHover={{ x: 5 }}
+                              transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                            >
+                              <span className="font-medium">Lihat Detail Proyek</span>
+                              <div className="w-8 h-8 bg-[#f8f8f8] rounded-full flex items-center justify-center group-hover:bg-[#FFD700] transition-colors duration-300">
+                                <ArrowRight className="w-4 h-4 text-gray-700 group-hover:text-[#111] transition-colors duration-300" />
+                              </div>
+                            </motion.div>
                           </div>
                         </div>
-                        
-                        {/* Content */}
-                        <div className="p-6 flex-grow flex flex-col">
-                          <p className="text-[#4A4A4A] mb-6 line-clamp-2 flex-grow">
-                            {relatedProject.description}
-                          </p>
-                          
-                          {/* Action link */}
-                          <motion.div
-                            className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100"
-                            whileHover={{ x: 5 }}
-                            transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                          >
-                            <span className="font-medium">Lihat Detail Proyek</span>
-                            <div className="w-8 h-8 bg-[#f8f8f8] rounded-full flex items-center justify-center group-hover:bg-[#FFD700] transition-colors duration-300">
-                              <ArrowRight className="w-4 h-4 text-gray-700 group-hover:text-[#111] transition-colors duration-300" />
-                            </div>
-                          </motion.div>
-                        </div>
-                      </div>
-                    </Link>
-                  </motion.div>
+                      </Link>
+                    </motion.div>
+                  </LazyLoad>
                 ))}
               </div>
             </div>
