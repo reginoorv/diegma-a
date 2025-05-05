@@ -219,10 +219,8 @@ export default function ServicesPage() {
                 Tim profesional kami siap membantu Anda menemukan solusi desain yang sesuai dengan kebutuhan dan anggaran Anda.
                 Jadwalkan konsultasi gratis dengan kami hari ini.
               </p>
-              <Link href="/contact">
-                <a className="inline-block bg-[#FFD700] text-[#333333] font-medium py-3 px-8 rounded hover:bg-[#FFD700]/90 transition-colors">
-                  Hubungi Kami
-                </a>
+              <Link href="/contact" className="inline-block bg-[#FFD700] text-[#333333] font-medium py-3 px-8 rounded hover:bg-[#FFD700]/90 transition-colors">
+                Hubungi Kami
               </Link>
             </motion.div>
           </div>
