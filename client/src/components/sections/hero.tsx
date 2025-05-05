@@ -1,15 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import { Link } from "wouter";
 
 export function Hero() {
-  const scrollToConsultation = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    const consultationSection = document.querySelector("#konsultasi");
-    if (consultationSection) {
-      consultationSection.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-
   return (
     <section id="beranda" className="relative h-screen bg-gray-900 overflow-hidden pt-16">
       {/* Background image with overlay */}
@@ -36,12 +29,13 @@ export function Hero() {
           <p className="text-xl text-white/90 mb-8">
             Kami menghadirkan desain yang tidak hanya artistik, tapi mencerminkan nilai dan gaya hidup unik Anda
           </p>
-          <Button 
-            className="bg-[#FFD700] text-dark hover:bg-[#FFD700]/90 font-medium py-3 px-8 rounded"
-            onClick={scrollToConsultation}
-          >
-            Konsultasi Sekarang
-          </Button>
+          <Link href="/contact">
+            <Button 
+              className="bg-[#FFD700] text-dark hover:bg-[#FFD700]/90 font-medium py-3 px-8 rounded"
+            >
+              Konsultasi Sekarang
+            </Button>
+          </Link>
         </motion.div>
       </div>
     </section>

@@ -129,22 +129,22 @@ export function Navbar() {
                               key={child.label}
                               href={child.href}
                               onClick={closeMenu}
+                              className={`block px-4 py-2 hover:bg-gray-100 ${location === child.href ? "text-[#FFD700]" : ""}`}
                             >
-                              <a className={`block px-4 py-2 hover:bg-gray-100 ${location === child.href ? "text-[#FFD700]" : ""}`}>
-                                {child.label}
-                              </a>
+                              {child.label}
                             </Link>
                           ))}
                         </div>
                       </div>
                     </>
                   ) : (
-                    <Link href={item.href}>
-                      <a className={`font-medium transition-colors ${
+                    <Link 
+                      href={item.href}
+                      className={`font-medium transition-colors ${
                         location === item.href ? "text-[#FFD700]" : "hover:text-[#FFD700]"
-                      }`}>
-                        {item.label}
-                      </a>
+                      }`}
+                    >
+                      {item.label}
                     </Link>
                   )}
                 </div>
@@ -200,12 +200,11 @@ export function Navbar() {
                         key={child.label}
                         href={child.href}
                         onClick={closeMenu}
-                      >
-                        <a className={`block px-3 py-2 text-sm font-medium ${
+                        className={`block px-3 py-2 text-sm font-medium ${
                           location === child.href ? "text-[#FFD700]" : "hover:text-[#FFD700]"
-                        } transition-colors`}>
-                          {child.label}
-                        </a>
+                        } transition-colors`}
+                      >
+                        {child.label}
                       </Link>
                     ))}
                   </div>
@@ -214,12 +213,11 @@ export function Navbar() {
                 <Link
                   href={item.href}
                   onClick={closeMenu}
-                >
-                  <a className={`block px-3 py-2 font-medium ${
+                  className={`block px-3 py-2 font-medium ${
                     location === item.href ? "text-[#FFD700]" : "hover:text-[#FFD700]"
-                  } transition-colors`}>
-                    {item.label}
-                  </a>
+                  } transition-colors`}
+                >
+                  {item.label}
                 </Link>
               )}
             </div>
