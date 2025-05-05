@@ -180,11 +180,9 @@ export default function ServicesPage() {
                       ))}
                     </div>
                     
-                    <Link href={`/service/${category.id}`}>
-                      <a className="inline-flex items-center text-dark font-medium hover:text-[#FFD700] transition-colors">
-                        Lihat Detail Layanan
-                        <ArrowRight className="w-4 h-4 ml-2" />
-                      </a>
+                    <Link href={`/service/${category.id}`} className="inline-flex items-center text-dark font-medium hover:text-[#FFD700] transition-colors">
+                      Lihat Selengkapnya
+                      <ArrowRight className="w-4 h-4 ml-2" />
                     </Link>
                   </motion.div>
                   
