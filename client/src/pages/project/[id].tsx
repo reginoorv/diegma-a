@@ -2,7 +2,7 @@ import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { motion } from "framer-motion";
 import { Link, useParams } from "wouter";
-import { ArrowLeft, ChevronRight, Check } from "lucide-react";
+import { ArrowLeft, ChevronRight, Check, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 // Project types for filtering
@@ -204,15 +204,32 @@ export default function ProjectDetailPage() {
     return (
       <div className="min-h-screen">
         <Navbar />
-        <main className="py-20">
-          <div className="container mx-auto px-4 text-center">
-            <h1 className="text-4xl font-bold font-serif mb-4">Proyek Tidak Ditemukan</h1>
-            <p className="mb-8">Maaf, proyek yang Anda cari tidak ditemukan.</p>
-            <Link href="/projects">
-              <Button>
-                Kembali ke Daftar Proyek
-              </Button>
-            </Link>
+        <main className="relative py-24 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-b from-gray-50 to-gray-100 z-0"></div>
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#FFD700]/5 rounded-full blur-3xl z-0"></div>
+          <div className="absolute -bottom-20 -left-20 w-60 h-60 bg-[#FFD700]/10 rounded-full blur-3xl z-0"></div>
+          
+          <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6 }}
+              className="bg-white p-10 rounded-xl shadow-xl max-w-lg mx-auto"
+            >
+              <h1 className="text-3xl font-bold mb-4">Proyek Tidak Ditemukan</h1>
+              <p className="mb-8 text-[#4A4A4A]">Maaf, proyek yang Anda cari tidak ditemukan.</p>
+              <Link href="/projects">
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Button className="bg-[#FFD700] text-[#333333] hover:bg-[#FFD700]/90">
+                    <ArrowLeft className="w-4 h-4 mr-2" />
+                    Kembali ke Daftar Proyek
+                  </Button>
+                </motion.div>
+              </Link>
+            </motion.div>
           </div>
         </main>
         <Footer />
@@ -229,130 +246,261 @@ export default function ProjectDetailPage() {
     <div className="min-h-screen">
       <Navbar />
       <main>
-        {/* Hero section */}
-        <section 
-          className="relative h-[60vh] bg-cover bg-center" 
-          style={{ backgroundImage: `url(${project.image})` }}
-        >
-          <div className="absolute inset-0 bg-black bg-opacity-50"></div>
-          <div className="container mx-auto px-4 h-full flex items-center relative z-10">
+        {/* Hero section with parallax effect */}
+        <section className="relative h-[70vh] md:h-[80vh] bg-cover bg-center bg-fixed overflow-hidden">
+          <motion.div 
+            className="absolute inset-0 bg-black/40 z-10"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1 }}
+          ></motion.div>
+          
+          <motion.div
+            className="absolute inset-0 z-0"
+            initial={{ scale: 1.1 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 1.5 }}
+          >
+            <img 
+              src={project.image} 
+              alt={project.title} 
+              className="w-full h-full object-cover"
+            />
+          </motion.div>
+          
+          <div className="container mx-auto px-4 h-full flex items-center relative z-20">
             <div className="max-w-3xl">
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
               >
                 <Link href="/projects">
-                  <a className="inline-flex items-center text-white hover:text-[#FFD700] mb-6 transition-colors">
-                    <ArrowLeft className="w-4 h-4 mr-2" />
+                  <motion.div 
+                    className="inline-flex items-center text-white hover:text-[#FFD700] mb-6 transition-colors cursor-pointer"
+                    whileHover={{ x: -5 }}
+                    transition={{ type: "spring", stiffness: 400 }}
+                  >
+                    <ArrowLeft className="w-5 h-5 mr-2" />
                     Kembali ke Proyek
-                  </a>
+                  </motion.div>
                 </Link>
-                <h1 className="text-5xl font-bold font-serif text-white mb-4">{project.title}</h1>
-                <p className="text-xl text-white/90 mb-6">{project.description}</p>
+                
+                <motion.h1 
+                  className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.7, delay: 0.3 }}
+                >
+                  {project.title}
+                </motion.h1>
+                
+                <motion.p 
+                  className="text-lg md:text-xl text-white/90 mb-6 max-w-2xl"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.7, delay: 0.4 }}
+                >
+                  {project.description}
+                </motion.p>
+                
+                <motion.div
+                  className="flex flex-wrap gap-3"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.7, delay: 0.5 }}
+                >
+                  <span className="bg-white/20 backdrop-blur-sm px-4 py-1.5 rounded-full text-sm text-white">
+                    {project.category}
+                  </span>
+                  <span className="bg-white/20 backdrop-blur-sm px-4 py-1.5 rounded-full text-sm text-white">
+                    {project.location}
+                  </span>
+                  <span className="bg-white/20 backdrop-blur-sm px-4 py-1.5 rounded-full text-sm text-white">
+                    {project.year}
+                  </span>
+                </motion.div>
               </motion.div>
             </div>
           </div>
+          
+          {/* Scroll indicator */}
+          <motion.div 
+            className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.8, repeat: Infinity, repeatType: "reverse" }}
+          >
+            <ChevronRight className="w-8 h-8 text-white transform rotate-90" />
+          </motion.div>
         </section>
         
         {/* Project details */}
-        <section className="py-16 bg-white">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        <section className="py-20 relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-20 bg-gradient-to-b from-black/20 to-transparent z-0"></div>
+          <div className="absolute -top-40 -left-40 w-80 h-80 bg-[#FFD700]/5 rounded-full blur-3xl z-0"></div>
+          <div className="absolute -bottom-40 -right-40 w-80 h-80 bg-[#FFD700]/5 rounded-full blur-3xl z-0"></div>
+          
+          <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-16">
               <motion.div 
                 className="lg:col-span-2"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7 }}
               >
-                <h2 className="text-3xl font-bold font-serif mb-6">Tentang Proyek</h2>
-                <p className="text-[#4A4A4A] mb-8 leading-relaxed">
-                  {project.fullDescription}
-                </p>
-                
-                <h3 className="text-xl font-bold font-serif mb-4">Fitur Utama</h3>
-                <ul className="space-y-3 mb-10">
-                  {project.features.map((feature, index) => (
-                    <li key={index} className="flex items-start">
-                      <span className="mr-3 mt-1 text-[#FFD700]">
-                        <Check size={16} />
-                      </span>
-                      <span className="text-[#4A4A4A]">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-                
-                <h3 className="text-xl font-bold font-serif mb-4">Galeri</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-                  {project.gallery.map((image, index) => (
-                    <motion.div
-                      key={index}
-                      className="rounded-lg overflow-hidden shadow-md"
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      whileInView={{ opacity: 1, scale: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.5, delay: index * 0.1 }}
-                    >
-                      <img 
-                        src={image} 
-                        alt={`${project.title} gallery ${index + 1}`} 
-                        className="w-full h-60 object-cover"
-                      />
-                    </motion.div>
-                  ))}
-                </div>
-                
-                <div className="bg-[#F8F8F8] p-8 rounded-lg">
-                  <h3 className="text-xl font-bold font-serif mb-4">Tertarik dengan proyek ini?</h3>
-                  <p className="text-[#4A4A4A] mb-6">
-                    Konsultasikan kebutuhan Anda dengan tim kami dan temukan solusi desain yang sesuai dengan kebutuhan Anda.
+                <div className="mb-12">
+                  <h2 className="text-3xl font-bold mb-4">Tentang Proyek</h2>
+                  <div className="w-16 h-1 bg-[#FFD700] mb-8"></div>
+                  <p className="text-[#4A4A4A] text-lg mb-8 leading-relaxed">
+                    {project.fullDescription}
                   </p>
-                  <Link href="/contact">
-                    <a className="inline-block bg-[#FFD700] text-[#333333] font-medium py-3 px-8 rounded hover:bg-[#FFD700]/90 transition-colors">
-                      Hubungi Kami
-                    </a>
-                  </Link>
                 </div>
+                
+                <div className="mb-12">
+                  <h3 className="text-2xl font-bold mb-6">Fitur Utama</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {project.features.map((feature, index) => (
+                      <motion.div 
+                        key={index} 
+                        className="flex items-start p-4 bg-gray-50 rounded-lg hover:bg-[#FFFBEA] transition-colors"
+                        initial={{ opacity: 0, y: 10 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.5, delay: 0.1 * index }}
+                        whileHover={{ x: 5 }}
+                      >
+                        <div className="w-8 h-8 bg-[#FFD700] rounded-full flex items-center justify-center flex-shrink-0 mr-4">
+                          <Check className="w-4 h-4 text-white" />
+                        </div>
+                        <span className="text-[#4A4A4A]">{feature}</span>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+                
+                <div className="mb-12">
+                  <h3 className="text-2xl font-bold mb-6">Galeri Proyek</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+                    {project.gallery.map((image, index) => (
+                      <motion.div
+                        key={index}
+                        className="rounded-xl overflow-hidden shadow-lg group relative"
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.6, delay: index * 0.15 }}
+                        whileHover={{ y: -5 }}
+                      >
+                        <div className="relative overflow-hidden aspect-[4/3]">
+                          {/* Overlay effect on hover */}
+                          <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 flex items-center justify-center">
+                            <motion.div 
+                              className="px-6 py-3 border border-white rounded-full text-white"
+                              initial={{ scale: 0.8, opacity: 0 }}
+                              whileInView={{ scale: 1, opacity: 1 }}
+                              viewport={{ once: true }}
+                              transition={{ duration: 0.3, delay: 0.1 }}
+                            >
+                              Lihat Detail
+                            </motion.div>
+                          </div>
+                          
+                          {/* Image with zoom effect */}
+                          <img 
+                            src={image} 
+                            alt={`${project.title} gallery ${index + 1}`} 
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                          />
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+                
+                <motion.div 
+                  className="bg-gradient-to-br from-gray-900 to-gray-800 text-white p-8 md:p-10 rounded-2xl shadow-xl"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.7 }}
+                >
+                  <div className="flex flex-col md:flex-row md:items-center gap-6">
+                    <div className="flex-grow">
+                      <h3 className="text-2xl font-bold mb-3">Tertarik dengan proyek ini?</h3>
+                      <p className="text-gray-300 mb-6 md:mb-0">
+                        Konsultasikan kebutuhan Anda dengan tim kami dan temukan solusi desain yang tepat untuk Anda.
+                      </p>
+                    </div>
+                    <div className="flex-shrink-0">
+                      <Link href="/contact">
+                        <motion.button
+                          className="bg-[#FFD700] text-[#333333] font-medium py-3 px-8 rounded-lg hover:bg-[#FFD700]/90 transition-colors shadow-lg"
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          Hubungi Kami
+                        </motion.button>
+                      </Link>
+                    </div>
+                  </div>
+                </motion.div>
               </motion.div>
               
               <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7, delay: 0.2 }}
               >
-                <div className="bg-[#F8F8F8] p-8 rounded-lg sticky top-24">
-                  <h3 className="text-xl font-bold font-serif mb-6">Informasi Proyek</h3>
+                <div className="bg-white p-8 rounded-xl shadow-lg sticky top-24">
+                  <h3 className="text-2xl font-bold mb-6">Informasi Proyek</h3>
+                  <div className="w-12 h-1 bg-[#FFD700] mb-8"></div>
                   
-                  <div className="space-y-5">
-                    <div>
+                  <div className="space-y-6">
+                    <div className="bg-gray-50 p-4 rounded-lg hover:bg-[#FFFBEA] transition-colors">
                       <p className="text-sm text-gray-500 mb-1">Kategori</p>
                       <p className="font-medium">{project.category}</p>
                     </div>
                     
-                    <div>
+                    <div className="bg-gray-50 p-4 rounded-lg hover:bg-[#FFFBEA] transition-colors">
                       <p className="text-sm text-gray-500 mb-1">Lokasi</p>
                       <p className="font-medium">{project.location}</p>
                     </div>
                     
-                    <div>
+                    <div className="bg-gray-50 p-4 rounded-lg hover:bg-[#FFFBEA] transition-colors">
                       <p className="text-sm text-gray-500 mb-1">Tahun</p>
                       <p className="font-medium">{project.year}</p>
                     </div>
                     
-                    <div>
+                    <div className="bg-gray-50 p-4 rounded-lg hover:bg-[#FFFBEA] transition-colors">
                       <p className="text-sm text-gray-500 mb-1">Klien</p>
                       <p className="font-medium">{project.client}</p>
                     </div>
                     
-                    <div>
+                    <div className="bg-gray-50 p-4 rounded-lg hover:bg-[#FFFBEA] transition-colors">
                       <p className="text-sm text-gray-500 mb-1">Luas</p>
                       <p className="font-medium">{project.area}</p>
                     </div>
                     
-                    <div>
+                    <div className="bg-gray-50 p-4 rounded-lg hover:bg-[#FFFBEA] transition-colors">
                       <p className="text-sm text-gray-500 mb-1">Arsitek</p>
                       <p className="font-medium">{project.architect}</p>
                     </div>
+                  </div>
+                  
+                  <div className="mt-8 pt-6 border-t border-gray-100">
+                    <Link href="/projects">
+                      <motion.div
+                        className="inline-flex items-center text-[#333] font-medium hover:text-[#FFD700] transition-colors cursor-pointer"
+                        whileHover={{ x: -5 }}
+                        transition={{ type: "spring", stiffness: 400 }}
+                      >
+                        <ArrowLeft className="w-4 h-4 mr-2" />
+                        Kembali ke Semua Proyek
+                      </motion.div>
+                    </Link>
                   </div>
                 </div>
               </motion.div>
@@ -362,46 +510,105 @@ export default function ProjectDetailPage() {
         
         {/* Related projects */}
         {relatedProjects.length > 0 && (
-          <section className="py-16 bg-[#F8F8F8]">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <section className="py-24 bg-gray-50 relative overflow-hidden">
+            <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#FFD700]/5 rounded-full blur-3xl z-0"></div>
+            <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#FFD700]/5 rounded-full blur-3xl z-0"></div>
+            
+            <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
+                transition={{ duration: 0.7 }}
+                className="text-center mb-16"
               >
-                <h2 className="text-3xl font-bold font-serif mb-10">Proyek Terkait</h2>
-                
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                  {relatedProjects.map((relatedProject, index) => (
-                    <motion.div
-                      key={relatedProject.id}
-                      className="bg-white rounded-lg overflow-hidden shadow-lg"
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      whileInView={{ opacity: 1, scale: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.5, delay: index * 0.1 }}
-                    >
-                      <Link href={`/project/${relatedProject.id}`}>
-                        <a className="block">
-                          <div className="relative overflow-hidden">
-                            <img 
-                              src={relatedProject.image} 
-                              alt={relatedProject.title} 
-                              className="w-full h-48 object-cover transition-transform duration-500 hover:scale-110"
-                            />
-                          </div>
-                          <div className="p-6">
-                            <h3 className="font-serif font-bold text-lg mb-2">{relatedProject.title}</h3>
-                            <p className="text-sm text-[#FFD700] mb-3">{relatedProject.category}</p>
-                            <p className="text-sm text-gray-500 line-clamp-2">{relatedProject.description}</p>
-                          </div>
-                        </a>
-                      </Link>
-                    </motion.div>
-                  ))}
-                </div>
+                <h2 className="text-3xl font-bold mb-4">Proyek Terkait</h2>
+                <div className="w-24 h-1 bg-[#FFD700] mx-auto mb-8"></div>
+                <p className="text-[#4A4A4A] max-w-xl mx-auto">
+                  Jelajahi proyek lain yang serupa dengan {project.title}
+                </p>
               </motion.div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10">
+                {relatedProjects.map((relatedProject, index) => (
+                  <motion.div
+                    key={relatedProject.id}
+                    className="group bg-white rounded-xl overflow-hidden shadow-lg"
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.7, delay: index * 0.15 }}
+                    whileHover={{ y: -10 }}
+                  >
+                    <Link href={`/project/${relatedProject.id}`}>
+                      <div className="cursor-pointer h-full flex flex-col">
+                        {/* Image container with effects */}
+                        <div className="relative overflow-hidden h-[250px]">
+                          {/* Gradient overlay for text readability */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-black/10 opacity-60 z-10"></div>
+                          
+                          {/* Image with zoom effect */}
+                          <motion.img 
+                            src={relatedProject.image} 
+                            alt={relatedProject.title} 
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                          />
+                          
+                          {/* Category badge */}
+                          <div className="absolute top-4 left-4 z-20">
+                            <motion.span 
+                              className="inline-block px-3 py-1.5 bg-white/90 backdrop-blur-sm text-sm font-medium rounded-full"
+                              initial={{ opacity: 0, x: -20 }}
+                              whileInView={{ opacity: 1, x: 0 }}
+                              viewport={{ once: true }}
+                              transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
+                            >
+                              {relatedProject.type === "residential" ? "Residensial" : 
+                               relatedProject.type === "commercial" ? "Komersial" : "Interior"}
+                            </motion.span>
+                          </div>
+                          
+                          {/* View project overlay */}
+                          <div className="absolute inset-0 bg-[#FFD700]/20 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 flex items-center justify-center">
+                            <div className="bg-white/90 backdrop-blur-md rounded-full p-3 transition-transform">
+                              <ArrowRight className="w-6 h-6 text-gray-800" />
+                            </div>
+                          </div>
+                          
+                          {/* Title overlay */}
+                          <div className="absolute bottom-0 left-0 w-full p-6 z-20">
+                            <h3 className="text-xl font-bold text-white mb-1">
+                              {relatedProject.title}
+                            </h3>
+                            <p className="text-white/80 text-sm">
+                              {relatedProject.location}, {relatedProject.year}
+                            </p>
+                          </div>
+                        </div>
+                        
+                        {/* Content */}
+                        <div className="p-6 flex-grow flex flex-col">
+                          <p className="text-[#4A4A4A] mb-6 line-clamp-2 flex-grow">
+                            {relatedProject.description}
+                          </p>
+                          
+                          {/* Action link */}
+                          <motion.div
+                            className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100"
+                            whileHover={{ x: 5 }}
+                            transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                          >
+                            <span className="font-medium">Lihat Detail Proyek</span>
+                            <div className="w-8 h-8 bg-[#f8f8f8] rounded-full flex items-center justify-center group-hover:bg-[#FFD700] transition-colors duration-300">
+                              <ArrowRight className="w-4 h-4 text-gray-700 group-hover:text-[#111] transition-colors duration-300" />
+                            </div>
+                          </motion.div>
+                        </div>
+                      </div>
+                    </Link>
+                  </motion.div>
+                ))}
+              </div>
             </div>
           </section>
         )}
