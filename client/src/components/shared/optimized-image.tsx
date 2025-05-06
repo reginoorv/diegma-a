@@ -24,7 +24,6 @@ interface OptimizedImageProps {
   fill?: boolean;
   fadeIn?: boolean;
   quality?: number;
-  fetchPriority?: 'high' | 'low' | 'auto';
   useSrcSet?: boolean;
   rounded?: boolean | string;
 }
@@ -46,7 +45,7 @@ export function OptimizedImage({
   fill = false,
   fadeIn = true,
   quality = 80,
-  fetchPriority = 'auto',
+
   useSrcSet = true,
   rounded = false,
 }: OptimizedImageProps) {
@@ -145,7 +144,6 @@ export function OptimizedImage({
           width={width}
           height={height}
           loading={priority ? 'eager' : loading}
-          fetchPriority={priority ? 'high' : fetchPriority}
           onLoad={handleImageLoad}
           onError={handleImageError}
           className={cn(
