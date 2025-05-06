@@ -102,6 +102,55 @@
     font-family: 'Montserrat', sans-serif;
     font-weight: 700;
   }
+  
+  /* Global dark mode adaptations */
+  .dark body {
+    @apply bg-gray-900 text-gray-100;
+  }
+  
+  .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
+    @apply text-white;
+  }
+  
+  .dark p {
+    @apply text-gray-300;
+  }
+  
+  .dark .bg-white {
+    @apply bg-gray-800;
+  }
+  
+  .dark .bg-gray-50, .dark .bg-gray-100 {
+    @apply bg-gray-800;
+  }
+  
+  .dark .bg-gray-200 {
+    @apply bg-gray-700;
+  }
+  
+  .dark .text-gray-500 {
+    @apply text-gray-400;
+  }
+  
+  .dark .text-gray-600, .dark .text-gray-700, .dark .text-gray-800 {
+    @apply text-gray-300;
+  }
+  
+  .dark .text-gray-900 {
+    @apply text-gray-100;
+  }
+  
+  .dark .border-gray-100, .dark .border-gray-200 {
+    @apply border-gray-700;
+  }
+  
+  .dark .border-gray-300 {
+    @apply border-gray-600;
+  }
+  
+  .dark .shadow-lg, .dark .shadow-md, .dark .shadow-sm, .dark .shadow-xl {
+    @apply shadow-black/20;
+  }
 }
 
 /* Custom styles */
@@ -138,9 +187,18 @@
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.dark .project-card {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  background-color: #1f2937;
+}
+
 .project-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+.dark .project-card:hover {
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
 }
 
 .project-card img {
@@ -174,8 +232,18 @@
   transition: all 0.5s ease;
 }
 
+.dark .client-logo {
+  filter: grayscale(100%) brightness(0.8) invert(0.8);
+  opacity: 0.7;
+}
+
 .client-logo:hover {
   filter: grayscale(0%);
+  opacity: 1;
+}
+
+.dark .client-logo:hover {
+  filter: grayscale(0%) brightness(1) invert(0.8);
   opacity: 1;
 }
 
@@ -187,9 +255,18 @@
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
 }
 
+.dark .service-card {
+  background-color: #1f2937;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
 .service-card:hover {
   transform: translateY(-10px);
   box-shadow: 0 20px 35px rgba(0, 0, 0, 0.1);
+}
+
+.dark .service-card:hover {
+  box-shadow: 0 20px 35px rgba(0, 0, 0, 0.3);
 }
 
 /* Premium button styles */
@@ -269,6 +346,10 @@ html {
 
 ::-webkit-scrollbar-track {
   background: #f1f1f1;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: #333;
 }
 
 ::-webkit-scrollbar-thumb {

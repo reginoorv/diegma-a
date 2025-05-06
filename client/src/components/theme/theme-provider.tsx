@@ -42,10 +42,33 @@ export function ThemeProvider({
         : "light";
 
       root.classList.add(systemTheme);
-      return;
+      
+      // Add listener for changes in system theme
+      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+      
+      const handleChange = (e: MediaQueryListEvent) => {
+        const newTheme = e.matches ? "dark" : "light";
+        root.classList.remove("light", "dark");
+        root.classList.add(newTheme);
+      };
+      
+      mediaQuery.addEventListener("change", handleChange);
+      
+      return () => {
+        mediaQuery.removeEventListener("change", handleChange);
+      };
     }
 
     root.classList.add(theme);
+    
+    // Apply theme to meta theme-color for mobile browsers
+    const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+    if (metaThemeColor) {
+      metaThemeColor.setAttribute(
+        "content",
+        theme === "dark" ? "#0f172a" : "#ffffff"
+      );
+    }
   }, [theme]);
 
   const value = {
