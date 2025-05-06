@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Sun, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTheme } from "@/components/theme/theme-provider";
+import { ThemeSwitcher } from "@/components/theme/theme-switcher";
 
 interface NavItem {
   label: string;
@@ -21,6 +23,7 @@ export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [location] = useLocation();
+  const { theme } = useTheme();
 
   // Handle scroll event to change navbar appearance
   useEffect(() => {
@@ -50,8 +53,12 @@ export function Navbar() {
       transition={{ duration: 0.5, ease: "easeOut" }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled 
-          ? "bg-white/95 backdrop-blur-md shadow-lg" 
-          : "bg-white/80 backdrop-blur-sm"
+          ? theme === "dark"
+            ? "bg-gray-900/95 backdrop-blur-md shadow-lg" 
+            : "bg-white/95 backdrop-blur-md shadow-lg"
+          : theme === "dark"
+            ? "bg-gray-900/80 backdrop-blur-sm" 
+            : "bg-white/80 backdrop-blur-sm"
       }`}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -62,7 +69,7 @@ export function Navbar() {
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                className="text-2xl font-bold tracking-tighter"
+                className="text-2xl font-bold tracking-tighter dark:text-white"
               >
                 DIEGMA
               </motion.div>
@@ -70,8 +77,8 @@ export function Navbar() {
           </div>
           
           {/* Desktop menu */}
-          <div className="hidden md:block">
-            <div className="ml-10 flex items-center space-x-10">
+          <div className="hidden md:flex items-center">
+            <div className="mr-4 flex items-center space-x-10">
               {navItems.map((item, index) => (
                 <motion.div
                   key={item.label}
@@ -84,7 +91,9 @@ export function Navbar() {
                     className={`relative font-medium tracking-wide transition-colors ${
                       location === item.href 
                         ? "text-[#FFD700]" 
-                        : "text-gray-800 hover:text-[#FFD700]"
+                        : theme === "dark"
+                          ? "text-gray-200 hover:text-[#FFD700]"
+                          : "text-gray-800 hover:text-[#FFD700]"
                     }`}
                   >
                     <span className="block py-2 px-1">{item.label}</span>
@@ -101,17 +110,28 @@ export function Navbar() {
                 </motion.div>
               ))}
             </div>
+            
+            {/* Theme Switcher - Desktop */}
+            <ThemeSwitcher />
           </div>
           
-          {/* Mobile menu button */}
-          <div className="md:hidden">
+          {/* Mobile controls */}
+          <div className="flex items-center md:hidden">
+            {/* Theme Switcher - Mobile */}
+            <ThemeSwitcher />
+            
+            {/* Mobile menu button */}
             <Button 
               variant="ghost" 
               size="icon"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-expanded={mobileMenuOpen}
               aria-label="Toggle menu"
-              className="hover:bg-gray-100 rounded-full w-10 h-10"
+              className={`rounded-full w-10 h-10 ml-2 ${
+                theme === "dark" 
+                  ? "hover:bg-gray-800" 
+                  : "hover:bg-gray-100"
+              }`}
             >
               {mobileMenuOpen ? (
                 <X className="h-5 w-5" />
@@ -131,7 +151,11 @@ export function Navbar() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="md:hidden bg-white border-t overflow-hidden"
+            className={`md:hidden border-t overflow-hidden ${
+              theme === "dark" 
+                ? "bg-gray-900 border-gray-800" 
+                : "bg-white border-gray-100"
+            }`}
           >
             <div className="px-4 pt-4 pb-6 space-y-4">
               {navItems.map((item, index) => (
@@ -144,11 +168,15 @@ export function Navbar() {
                   <Link
                     href={item.href}
                     onClick={closeMenu}
-                    className={`block px-3 py-3 rounded-md font-medium ${
+                    className={`block px-3 py-3 rounded-md font-medium transition-colors ${
                       location === item.href 
-                        ? "bg-gray-50 text-[#FFD700]" 
-                        : "hover:bg-gray-50 hover:text-[#FFD700]"
-                    } transition-colors`}
+                        ? theme === "dark"
+                          ? "bg-gray-800 text-[#FFD700]"
+                          : "bg-gray-50 text-[#FFD700]"
+                        : theme === "dark"
+                          ? "hover:bg-gray-800 hover:text-[#FFD700] text-gray-300"
+                          : "hover:bg-gray-50 hover:text-[#FFD700] text-gray-700"
+                    }`}
                   >
                     {item.label}
                   </Link>

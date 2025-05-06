@@ -33,6 +33,15 @@
   --destructive-foreground: 60 9.1% 97.8%;
   --ring: 20 14.3% 4.1%;
   --radius: 0.5rem;
+  
+  /* Custom DIEGMA colors */
+  --diegma-gold: 47 100% 50%;
+  --diegma-gold-dark: 47 90% 45%;
+  --diegma-gold-light: 47 100% 70%;
+  --diegma-overlay: 0 0% 0% / 0.5;
+  --diegma-gray-light: 0 0% 96%;
+  --diegma-gray-medium: 0 0% 90%;
+  --diegma-gray-dark: 0 0% 20%;
 }
 
 .dark {
@@ -55,6 +64,15 @@
   --destructive: 0 62.8% 30.6%;
   --destructive-foreground: 0 0% 98%;
   --ring: 240 4.9% 83.9%;
+  
+  /* Custom DIEGMA dark mode colors */
+  --diegma-gold: 47 100% 55%;
+  --diegma-gold-dark: 47 90% 45%;
+  --diegma-gold-light: 47 100% 70%;
+  --diegma-overlay: 0 0% 0% / 0.7;
+  --diegma-gray-light: 240 5% 25%;
+  --diegma-gray-medium: 240 5% 20%;
+  --diegma-gray-dark: 0 0% 95%;
 }
 
 @layer base {
