@@ -2,13 +2,14 @@ import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { motion } from "framer-motion";
 import { Link, useParams } from "wouter";
-import { ArrowLeft, ChevronRight, Check, ArrowRight } from "lucide-react";
+import { ArrowLeft, ChevronRight, Check, ArrowRight, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SEO } from "@/components/shared/seo";
 import { OptimizedImage } from "@/components/shared/optimized-image";
 import { LazyLoad } from "@/components/shared/lazy-load";
 import { useEffect, useRef } from "react";
 import { generateProductSchema, generateBreadcrumbSchema } from "@/lib/seo";
+import { useTheme } from "@/components/theme/theme-provider";
 
 // Project types for filtering
 type ProjectType = "all" | "residential" | "commercial" | "interior";
@@ -200,12 +201,20 @@ export default function ProjectDetailPage() {
   // Get the project ID from the URL
   const params = useParams();
   const projectId = parseInt(params.id as string);
+  const { theme } = useTheme();
   
   // Ref for the content section to track visibility
   const contentRef = useRef<HTMLDivElement>(null);
   
   // Find the project by ID
   const project = projects.find(p => p.id === projectId);
+  
+  // Format WhatsApp message for project
+  const formatWhatsAppMessage = (projectTitle: string): string => {
+    return encodeURIComponent(
+      `Halo DIEGMA,\n\nSaya tertarik dengan proyek *${projectTitle}*.\n\nBoleh saya mendapatkan informasi lebih lanjut tentang proyek serupa untuk kebutuhan saya?\n\nTerima kasih!`
+    );
+  };
   
   // Scroll to top on page load or when projectId changes
   useEffect(() => {
@@ -215,10 +224,14 @@ export default function ProjectDetailPage() {
   // If project not found, show error
   if (!project) {
     return (
-      <div className="min-h-screen">
+      <div className="min-h-screen dark:bg-gray-900">
         <Navbar />
         <main className="relative py-24 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-b from-gray-50 to-gray-100 z-0"></div>
+          <div className={`absolute inset-0 bg-gradient-to-b ${
+            theme === "dark" 
+              ? "from-gray-900/50 to-gray-950/30"
+              : "from-gray-50 to-gray-100"
+          } z-0`}></div>
           <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#FFD700]/5 rounded-full blur-3xl z-0"></div>
           <div className="absolute -bottom-20 -left-20 w-60 h-60 bg-[#FFD700]/10 rounded-full blur-3xl z-0"></div>
           
@@ -227,10 +240,16 @@ export default function ProjectDetailPage() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6 }}
-              className="bg-white p-10 rounded-xl shadow-xl max-w-lg mx-auto"
+              className={`${
+                theme === "dark"
+                  ? "bg-gray-800 text-white"
+                  : "bg-white"
+              } p-10 rounded-xl shadow-xl max-w-lg mx-auto`}
             >
               <h1 className="text-3xl font-bold mb-4">Proyek Tidak Ditemukan</h1>
-              <p className="mb-8 text-[#4A4A4A]">Maaf, proyek yang Anda cari tidak ditemukan.</p>
+              <p className={`mb-8 ${
+                theme === "dark" ? "text-gray-300" : "text-[#4A4A4A]"
+              }`}>Maaf, proyek yang Anda cari tidak ditemukan.</p>
               <Link href="/projects">
                 <motion.div
                   whileHover={{ scale: 1.05 }}
@@ -273,7 +292,7 @@ export default function ProjectDetailPage() {
   ]);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen dark:bg-gray-900">
       {/* SEO Implementation */}
       <SEO 
         title={`${project.title} - ${project.category}`}
@@ -287,7 +306,7 @@ export default function ProjectDetailPage() {
         {/* Hero section with parallax effect */}
         <section className="relative h-[70vh] md:h-[80vh] bg-cover bg-center overflow-hidden">
           <motion.div 
-            className="absolute inset-0 bg-black/40 z-10"
+            className="absolute inset-0 bg-black/50 z-10"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1 }}
@@ -393,20 +412,24 @@ export default function ProjectDetailPage() {
                     transition={{ duration: 0.7 }}
                   >
                     <div className="mb-12">
-                      <h2 className="text-3xl font-bold mb-4 text-responsive-lg">Tentang Proyek</h2>
+                      <h2 className="text-3xl font-bold mb-4 text-responsive-lg dark:text-white">Tentang Proyek</h2>
                       <div className="w-16 h-1 bg-[#FFD700] mb-8"></div>
-                      <p className="text-[#4A4A4A] text-lg mb-8 leading-relaxed">
+                      <p className="text-[#4A4A4A] dark:text-gray-300 text-lg mb-8 leading-relaxed">
                         {project.fullDescription}
                       </p>
                     </div>
                     
                     <div className="mb-12">
-                      <h3 className="text-2xl font-bold mb-6 text-responsive-md">Fitur Utama</h3>
+                      <h3 className="text-2xl font-bold mb-6 text-responsive-md dark:text-white">Fitur Utama</h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {project.features.map((feature, index) => (
                           <motion.div 
                             key={index} 
-                            className="flex items-start p-4 bg-gray-50 rounded-lg hover:bg-[#FFFBEA] transition-colors"
+                            className={`flex items-start p-4 rounded-lg transition-colors ${
+                              theme === "dark" 
+                                ? "bg-gray-800 hover:bg-gray-700" 
+                                : "bg-gray-50 hover:bg-[#FFFBEA]"
+                            }`}
                             initial={{ opacity: 0, y: 10 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
@@ -416,7 +439,9 @@ export default function ProjectDetailPage() {
                             <div className="w-8 h-8 bg-[#FFD700] rounded-full flex items-center justify-center flex-shrink-0 mr-4">
                               <Check className="w-4 h-4 text-white" />
                             </div>
-                            <span className="text-[#4A4A4A]">{feature}</span>
+                            <span className={`${
+                              theme === "dark" ? "text-gray-200" : "text-[#4A4A4A]"
+                            }`}>{feature}</span>
                           </motion.div>
                         ))}
                       </div>
@@ -427,7 +452,7 @@ export default function ProjectDetailPage() {
                 <LazyLoad>
                   <div className="mb-12">
                     <motion.h3 
-                      className="text-2xl font-bold mb-6 text-responsive-md"
+                      className="text-2xl font-bold mb-6 text-responsive-md dark:text-white"
                       initial={{ opacity: 0, y: 10 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
@@ -446,17 +471,8 @@ export default function ProjectDetailPage() {
                           whileHover={{ y: -5 }}
                         >
                           <div className="relative overflow-hidden aspect-4-3">
-                            {/* Overlay effect on hover */}
-                            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 flex items-center justify-center">
-                              <motion.div 
-                                className="px-6 py-3 border border-white rounded-full text-white"
-                                initial={{ scale: 0.8, opacity: 0 }}
-                                whileInView={{ scale: 1, opacity: 1 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.3, delay: 0.1 }}
-                              >
-                                Lihat Detail
-                              </motion.div>
+                            {/* Subtle overlay effect on hover without text */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
                             </div>
                             
                             {/* Optimized image with zoom effect */}
@@ -494,15 +510,20 @@ export default function ProjectDetailPage() {
                         </p>
                       </div>
                       <div className="flex-shrink-0">
-                        <Link href="/contact">
+                        <a 
+                          href={`https://wa.me/+6285703178423?text=${formatWhatsAppMessage(project.title)}`}
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                        >
                           <motion.button
-                            className="bg-[#FFD700] text-[#333333] font-medium py-3 px-8 rounded-lg hover:bg-[#FFD700]/90 transition-colors shadow-lg touch-target"
+                            className="bg-[#FFD700] text-[#333333] font-medium py-3 px-8 rounded-lg hover:bg-[#FFD700]/90 transition-colors shadow-lg touch-target flex items-center gap-2"
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                           >
+                            <MessageSquare className="w-5 h-5" />
                             Hubungi Kami
                           </motion.button>
-                        </Link>
+                        </a>
                       </div>
                     </div>
                   </motion.div>
@@ -517,46 +538,92 @@ export default function ProjectDetailPage() {
                   transition={{ duration: 0.7, delay: 0.2 }}
                   className="self-start"
                 >
-                  <div className="bg-white p-8 rounded-xl shadow-lg sticky top-24">
+                  <div className={`${
+                    theme === "dark"
+                      ? "bg-gray-800 text-white"
+                      : "bg-white"
+                  } p-8 rounded-xl shadow-lg sticky top-24`}>
                     <h3 className="text-2xl font-bold mb-6 text-responsive-md">Informasi Proyek</h3>
                     <div className="w-12 h-1 bg-[#FFD700] mb-8"></div>
                     
                     <div className="space-y-6">
-                      <div className="bg-gray-50 p-4 rounded-lg hover:bg-[#FFFBEA] transition-colors">
-                        <p className="text-sm text-gray-500 mb-1">Kategori</p>
+                      <div className={`${
+                        theme === "dark"
+                          ? "bg-gray-700 hover:bg-gray-600"
+                          : "bg-gray-50 hover:bg-[#FFFBEA]"
+                      } p-4 rounded-lg transition-colors`}>
+                        <p className={`text-sm ${
+                          theme === "dark" ? "text-gray-400" : "text-gray-500"
+                        } mb-1`}>Kategori</p>
                         <p className="font-medium">{project.category}</p>
                       </div>
                       
-                      <div className="bg-gray-50 p-4 rounded-lg hover:bg-[#FFFBEA] transition-colors">
-                        <p className="text-sm text-gray-500 mb-1">Lokasi</p>
+                      <div className={`${
+                        theme === "dark"
+                          ? "bg-gray-700 hover:bg-gray-600"
+                          : "bg-gray-50 hover:bg-[#FFFBEA]"
+                      } p-4 rounded-lg transition-colors`}>
+                        <p className={`text-sm ${
+                          theme === "dark" ? "text-gray-400" : "text-gray-500"
+                        } mb-1`}>Lokasi</p>
                         <p className="font-medium">{project.location}</p>
                       </div>
                       
-                      <div className="bg-gray-50 p-4 rounded-lg hover:bg-[#FFFBEA] transition-colors">
-                        <p className="text-sm text-gray-500 mb-1">Tahun</p>
+                      <div className={`${
+                        theme === "dark"
+                          ? "bg-gray-700 hover:bg-gray-600"
+                          : "bg-gray-50 hover:bg-[#FFFBEA]"
+                      } p-4 rounded-lg transition-colors`}>
+                        <p className={`text-sm ${
+                          theme === "dark" ? "text-gray-400" : "text-gray-500"
+                        } mb-1`}>Tahun</p>
                         <p className="font-medium">{project.year}</p>
                       </div>
                       
-                      <div className="bg-gray-50 p-4 rounded-lg hover:bg-[#FFFBEA] transition-colors">
-                        <p className="text-sm text-gray-500 mb-1">Klien</p>
+                      <div className={`${
+                        theme === "dark"
+                          ? "bg-gray-700 hover:bg-gray-600"
+                          : "bg-gray-50 hover:bg-[#FFFBEA]"
+                      } p-4 rounded-lg transition-colors`}>
+                        <p className={`text-sm ${
+                          theme === "dark" ? "text-gray-400" : "text-gray-500"
+                        } mb-1`}>Klien</p>
                         <p className="font-medium">{project.client}</p>
                       </div>
                       
-                      <div className="bg-gray-50 p-4 rounded-lg hover:bg-[#FFFBEA] transition-colors">
-                        <p className="text-sm text-gray-500 mb-1">Luas</p>
+                      <div className={`${
+                        theme === "dark"
+                          ? "bg-gray-700 hover:bg-gray-600"
+                          : "bg-gray-50 hover:bg-[#FFFBEA]"
+                      } p-4 rounded-lg transition-colors`}>
+                        <p className={`text-sm ${
+                          theme === "dark" ? "text-gray-400" : "text-gray-500"
+                        } mb-1`}>Luas</p>
                         <p className="font-medium">{project.area}</p>
                       </div>
                       
-                      <div className="bg-gray-50 p-4 rounded-lg hover:bg-[#FFFBEA] transition-colors">
-                        <p className="text-sm text-gray-500 mb-1">Arsitek</p>
+                      <div className={`${
+                        theme === "dark"
+                          ? "bg-gray-700 hover:bg-gray-600"
+                          : "bg-gray-50 hover:bg-[#FFFBEA]"
+                      } p-4 rounded-lg transition-colors`}>
+                        <p className={`text-sm ${
+                          theme === "dark" ? "text-gray-400" : "text-gray-500"
+                        } mb-1`}>Arsitek</p>
                         <p className="font-medium">{project.architect}</p>
                       </div>
                     </div>
                     
-                    <div className="mt-8 pt-6 border-t border-gray-100">
+                    <div className={`mt-8 pt-6 ${
+                      theme === "dark" ? "border-t border-gray-700" : "border-t border-gray-100"
+                    }`}>
                       <Link href="/projects">
                         <motion.div
-                          className="inline-flex items-center text-[#333] font-medium hover:text-[#FFD700] transition-colors cursor-pointer touch-target"
+                          className={`inline-flex items-center ${
+                            theme === "dark"
+                              ? "text-white hover:text-[#FFD700]"
+                              : "text-[#333] hover:text-[#FFD700]"
+                          } font-medium transition-colors cursor-pointer touch-target`}
                           whileHover={{ x: -5 }}
                           transition={{ type: "spring", stiffness: 400 }}
                         >
@@ -574,7 +641,9 @@ export default function ProjectDetailPage() {
         
         {/* Related projects */}
         {relatedProjects.length > 0 && (
-          <section className="py-24 bg-gray-50 relative overflow-hidden cv-auto">
+          <section className={`py-24 ${
+            theme === "dark" ? "bg-gray-900" : "bg-gray-50"
+          } relative overflow-hidden cv-auto`}>
             <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#FFD700]/5 rounded-full blur-3xl z-0"></div>
             <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#FFD700]/5 rounded-full blur-3xl z-0"></div>
             
@@ -587,9 +656,13 @@ export default function ProjectDetailPage() {
                   transition={{ duration: 0.7 }}
                   className="text-center mb-16"
                 >
-                  <h2 className="text-3xl font-bold mb-4 text-responsive-lg">Proyek Terkait</h2>
+                  <h2 className={`text-3xl font-bold mb-4 text-responsive-lg ${
+                    theme === "dark" ? "text-white" : ""
+                  }`}>Proyek Terkait</h2>
                   <div className="w-24 h-1 bg-[#FFD700] mx-auto mb-8"></div>
-                  <p className="text-[#4A4A4A] max-w-xl mx-auto">
+                  <p className={`${
+                    theme === "dark" ? "text-gray-300" : "text-[#4A4A4A]"
+                  } max-w-xl mx-auto`}>
                     Jelajahi proyek lain yang serupa dengan {project.title}
                   </p>
                 </motion.div>
@@ -599,7 +672,9 @@ export default function ProjectDetailPage() {
                 {relatedProjects.map((relatedProject, index) => (
                   <LazyLoad key={relatedProject.id}>
                     <motion.div
-                      className="group bg-white rounded-xl overflow-hidden shadow-lg h-full gpu"
+                      className={`group ${
+                        theme === "dark" ? "bg-gray-800" : "bg-white"
+                      } rounded-xl overflow-hidden shadow-lg h-full gpu`}
                       initial={{ opacity: 0, y: 30 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
@@ -658,19 +733,33 @@ export default function ProjectDetailPage() {
                           
                           {/* Content */}
                           <div className="p-6 flex-grow flex flex-col">
-                            <p className="text-[#4A4A4A] mb-6 line-clamp-2 flex-grow">
+                            <p className={`${
+                              theme === "dark" ? "text-gray-300" : "text-[#4A4A4A]"
+                            } mb-6 line-clamp-2 flex-grow`}>
                               {relatedProject.description}
                             </p>
                             
                             {/* Action link */}
                             <motion.div
-                              className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100"
+                              className={`flex items-center justify-between mt-4 pt-4 ${
+                                theme === "dark" ? "border-t border-gray-700" : "border-t border-gray-100"
+                              }`}
                               whileHover={{ x: 5 }}
                               transition={{ type: "spring", stiffness: 400, damping: 10 }}
                             >
-                              <span className="font-medium">Lihat Detail Proyek</span>
-                              <div className="w-8 h-8 bg-[#f8f8f8] rounded-full flex items-center justify-center group-hover:bg-[#FFD700] transition-colors duration-300">
-                                <ArrowRight className="w-4 h-4 text-gray-700 group-hover:text-[#111] transition-colors duration-300" />
+                              <span className={`font-medium ${
+                                theme === "dark" ? "text-gray-100" : ""
+                              }`}>Lihat Detail Proyek</span>
+                              <div className={`w-8 h-8 ${
+                                theme === "dark" 
+                                  ? "bg-gray-700 group-hover:bg-[#FFD700]" 
+                                  : "bg-[#f8f8f8] group-hover:bg-[#FFD700]"
+                              } rounded-full flex items-center justify-center transition-colors duration-300`}>
+                                <ArrowRight className={`w-4 h-4 ${
+                                  theme === "dark"
+                                    ? "text-gray-300 group-hover:text-[#111]"
+                                    : "text-gray-700 group-hover:text-[#111]"
+                                } transition-colors duration-300`} />
                               </div>
                             </motion.div>
                           </div>
