@@ -2,9 +2,11 @@ import { Facebook, Instagram, Linkedin, MapPin, Phone, Mail, Clock, ArrowRight, 
 import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { useState, useEffect } from "react";
+import { useTheme } from "@/components/theme/theme-provider";
 
 export function Footer() {
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const { theme } = useTheme();
 
   // Handle scroll event to show/hide the scroll-to-top button
   useEffect(() => {
@@ -30,6 +32,13 @@ export function Footer() {
     });
   };
 
+  // Format WhatsApp message for CTA
+  const formatWhatsAppMessage = (service: string): string => {
+    return encodeURIComponent(
+      `Halo DIEGMA,\n\nSaya tertarik dengan layanan *${service}* yang Anda tawarkan.\n\nMohon informasi lebih lanjut mengenai hal ini.\n\nTerima kasih!`
+    );
+  };
+
   return (
     <footer className="relative">
       {/* Background with gradient overlay */}
@@ -53,7 +62,11 @@ export function Footer() {
                 Konsultasikan kebutuhan desain dan arsitektur Anda dengan tim profesional kami.
               </p>
             </div>
-            <Link href="/contact">
+            <a 
+              href={`https://wa.me/+6285703178423?text=${formatWhatsAppMessage("Konsultasi Proyek")}`}
+              target="_blank" 
+              rel="noopener noreferrer"
+            >
               <motion.button 
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -63,7 +76,7 @@ export function Footer() {
                 <span className="font-medium">Hubungi Kami</span>
                 <ArrowRight size={16} />
               </motion.button>
-            </Link>
+            </a>
           </motion.div>
         </div>
       </div>
@@ -87,7 +100,7 @@ export function Footer() {
                 <motion.a 
                   whileHover={{ scale: 1.2, color: "#FFD700" }}
                   href="#" 
-                  className="text-gray-300 transition-all" 
+                  className="text-gray-300 hover:text-[#FFD700] transition-all" 
                   aria-label="Facebook"
                 >
                   <Facebook size={20} />
@@ -95,7 +108,7 @@ export function Footer() {
                 <motion.a 
                   whileHover={{ scale: 1.2, color: "#FFD700" }}
                   href="#" 
-                  className="text-gray-300 transition-all" 
+                  className="text-gray-300 hover:text-[#FFD700] transition-all" 
                   aria-label="Instagram"
                 >
                   <Instagram size={20} />
@@ -103,7 +116,7 @@ export function Footer() {
                 <motion.a 
                   whileHover={{ scale: 1.2, color: "#FFD700" }}
                   href="#" 
-                  className="text-gray-300 transition-all" 
+                  className="text-gray-300 hover:text-[#FFD700] transition-all" 
                   aria-label="LinkedIn"
                 >
                   <Linkedin size={20} />
@@ -162,24 +175,26 @@ export function Footer() {
               </h3>
               <ul className="space-y-5">
                 {[
-                  { label: "Desain Interior", href: "/service/interior-exterior" },
-                  { label: "Desain Eksterior", href: "/service/interior-exterior" },
-                  { label: "Konstruksi", href: "/service/construction" },
-                  { label: "Desain Furniture", href: "/service/furniture" },
-                  { label: "Konsultasi", href: "/contact" }
+                  { label: "Desain Interior", href: "/service/interior-exterior", inquiry: "Desain Interior" },
+                  { label: "Desain Eksterior", href: "/service/interior-exterior", inquiry: "Desain Eksterior" },
+                  { label: "Konstruksi", href: "/service/construction", inquiry: "Konstruksi" },
+                  { label: "Desain Furniture", href: "/service/furniture", inquiry: "Desain Furniture" },
+                  { label: "Konsultasi", href: "/contact", inquiry: "Konsultasi Umum" }
                 ].map((item, index) => (
                   <motion.li 
                     key={item.label}
                     whileHover={{ x: 5 }}
                     transition={{ type: "spring", stiffness: 400, damping: 10 }}
                   >
-                    <Link
-                      href={item.href}
+                    <a
+                      href={`https://wa.me/+6285703178423?text=${formatWhatsAppMessage(item.inquiry)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="flex items-center text-gray-300 hover:text-[#FFD700] transition-colors"
                     >
                       <ArrowRight size={14} className="mr-2 opacity-0 group-hover:opacity-100 transition-opacity" />
                       {item.label}
-                    </Link>
+                    </a>
                   </motion.li>
                 ))}
               </ul>
@@ -208,13 +223,25 @@ export function Footer() {
                   <div className="mr-4 p-2 bg-[#222] rounded-lg group-hover:bg-[#FFD700] transition-colors">
                     <Phone className="text-[#FFD700] group-hover:text-[#111] transition-colors" size={18} />
                   </div>
-                  <span className="text-gray-300">+62 123 4567 890</span>
+                  <a 
+                    href="https://wa.me/+6285703178423"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-300 hover:text-[#FFD700] transition-colors"
+                  >
+                    +62 857 0317 8423
+                  </a>
                 </li>
                 <li className="flex items-center group">
                   <div className="mr-4 p-2 bg-[#222] rounded-lg group-hover:bg-[#FFD700] transition-colors">
                     <Mail className="text-[#FFD700] group-hover:text-[#111] transition-colors" size={18} />
                   </div>
-                  <span className="text-gray-300">info@diegma.com</span>
+                  <a
+                    href="mailto:info@diegma.com"
+                    className="text-gray-300 hover:text-[#FFD700] transition-colors"
+                  >
+                    info@diegma.com
+                  </a>
                 </li>
                 <li className="flex items-center group">
                   <div className="mr-4 p-2 bg-[#222] rounded-lg group-hover:bg-[#FFD700] transition-colors">
