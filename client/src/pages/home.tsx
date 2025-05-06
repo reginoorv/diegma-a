@@ -17,7 +17,7 @@ export default function Home() {
         <Stats />
         
         {/* About preview section */}
-        <section className="py-16 bg-[#F8F8F8]">
+        <section className="py-16 bg-[#F8F8F8] dark:bg-gray-900">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <motion.div
@@ -26,25 +26,25 @@ export default function Home() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
               >
-                <h2 className="text-3xl font-bold font-serif mb-6">Tentang Studio Kami</h2>
-                <p className="text-[#4A4A4A] mb-6">
+                <h2 className="text-3xl font-bold font-serif mb-6 dark:text-white">Tentang Studio Kami</h2>
+                <p className="text-[#4A4A4A] dark:text-gray-300 mb-6">
                   DIEGMA adalah studio arsitektur dan desain interior yang berdedikasi untuk menciptakan ruang yang fungsional, 
                   estetis, dan bermakna. Kami percaya bahwa desain yang baik harus mencerminkan kebutuhan dan kepribadian klien 
                   kami, sambil tetap memperhatikan konteks lingkungan dan budaya.
                 </p>
-                <p className="text-[#4A4A4A] mb-8">
+                <p className="text-[#4A4A4A] dark:text-gray-300 mb-8">
                   Dengan tim yang terdiri dari para profesional berpengalaman, kami menawarkan solusi desain komprehensif mulai 
                   dari konsep awal hingga implementasi akhir.
                 </p>
                 <Link href="/about">
-                  <Button variant="link" className="p-0 h-auto font-medium text-black hover:text-[#FFD700] transition-colors">
+                  <Button variant="link" className="p-0 h-auto font-medium text-black dark:text-white hover:text-[#FFD700] dark:hover:text-[#FFD700] transition-colors">
                     Pelajari Lebih Lanjut <ArrowRight className="w-4 h-4 ml-2" />
                   </Button>
                 </Link>
               </motion.div>
               
               <motion.div 
-                className="rounded-lg overflow-hidden shadow-xl"
+                className="rounded-lg overflow-hidden shadow-xl dark:shadow-black/30"
                 initial={{ opacity: 0, x: 20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
@@ -65,10 +65,10 @@ export default function Home() {
         {/* Projects preview section */}
         <section className="relative py-24 overflow-hidden">
           {/* Background gradients and decorative elements */}
-          <div className="absolute inset-0 bg-gradient-to-b from-white via-gray-50 to-gray-100 z-0"></div>
-          <div className="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-white to-transparent z-0"></div>
-          <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#FFD700]/5 rounded-full blur-3xl z-0"></div>
-          <div className="absolute -bottom-20 -left-20 w-60 h-60 bg-[#FFD700]/10 rounded-full blur-3xl z-0"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-white via-gray-50 to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 z-0"></div>
+          <div className="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-white dark:from-gray-900 to-transparent z-0"></div>
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#FFD700]/5 dark:bg-[#FFD700]/10 rounded-full blur-3xl z-0"></div>
+          <div className="absolute -bottom-20 -left-20 w-60 h-60 bg-[#FFD700]/10 dark:bg-[#FFD700]/20 rounded-full blur-3xl z-0"></div>
           
           <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div 
@@ -84,10 +84,10 @@ export default function Home() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5 }}
               >
-                <h2 className="text-3xl md:text-4xl font-bold mb-6">Proyek Kami</h2>
+                <h2 className="text-3xl md:text-4xl font-bold mb-6 dark:text-white">Proyek Kami</h2>
                 <div className="w-24 h-1 bg-[#FFD700] mx-auto mb-8"></div>
               </motion.div>
-              <p className="text-[#4A4A4A] max-w-2xl mx-auto text-lg">
+              <p className="text-[#4A4A4A] dark:text-gray-300 max-w-2xl mx-auto text-lg">
                 Temukan beragam karya dan proyek yang telah kami selesaikan, dari residensial hingga komersial, 
                 dengan berbagai gaya dan pendekatan desain.
               </p>
@@ -167,15 +167,15 @@ export default function Home() {
                       </div>
                       
                       {/* Content below image */}
-                      <div className="p-6 bg-white flex-grow flex flex-col">
-                        <h3 className="font-bold text-xl mb-2 group-hover:text-[#FFD700] transition-colors duration-300">
+                      <div className="p-6 bg-white dark:bg-gray-800 flex-grow flex flex-col">
+                        <h3 className="font-bold text-xl mb-2 group-hover:text-[#FFD700] transition-colors duration-300 dark:text-white">
                           {project.title}
                         </h3>
-                        <p className="text-[#4A4A4A] mb-4 line-clamp-2">
+                        <p className="text-[#4A4A4A] dark:text-gray-300 mb-4 line-clamp-2">
                           {project.description}
                         </p>
-                        <div className="mt-auto pt-4 flex items-center border-t border-gray-100">
-                          <span className="text-sm font-medium text-[#4A4A4A] mr-2">Lihat Detail</span>
+                        <div className="mt-auto pt-4 flex items-center border-t border-gray-100 dark:border-gray-700">
+                          <span className="text-sm font-medium text-[#4A4A4A] dark:text-gray-300 mr-2">Lihat Detail</span>
                           <motion.div
                             className="text-[#FFD700]"
                             initial={{ x: 0 }}
@@ -216,9 +216,9 @@ export default function Home() {
         {/* Services preview section */}
         <section className="relative py-24 overflow-hidden">
           {/* Background gradients and decorative elements */}
-          <div className="absolute inset-0 bg-gradient-to-b from-gray-50 to-white z-0"></div>
-          <div className="absolute -left-40 top-40 w-80 h-80 bg-[#FFD700]/5 rounded-full blur-3xl z-0"></div>
-          <div className="absolute -right-40 bottom-0 w-80 h-80 bg-[#FFD700]/10 rounded-full blur-3xl z-0"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 z-0"></div>
+          <div className="absolute -left-40 top-40 w-80 h-80 bg-[#FFD700]/5 dark:bg-[#FFD700]/10 rounded-full blur-3xl z-0"></div>
+          <div className="absolute -right-40 bottom-0 w-80 h-80 bg-[#FFD700]/10 dark:bg-[#FFD700]/20 rounded-full blur-3xl z-0"></div>
           
           <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div 
@@ -234,10 +234,10 @@ export default function Home() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5 }}
               >
-                <h2 className="text-3xl md:text-4xl font-bold mb-6">Layanan Kami</h2>
+                <h2 className="text-3xl md:text-4xl font-bold mb-6 dark:text-white">Layanan Kami</h2>
                 <div className="w-24 h-1 bg-[#FFD700] mx-auto mb-8"></div>
               </motion.div>
-              <p className="text-[#4A4A4A] max-w-2xl mx-auto text-lg">
+              <p className="text-[#4A4A4A] dark:text-gray-300 max-w-2xl mx-auto text-lg">
                 Kami menawarkan berbagai layanan desain dan konstruksi untuk memenuhi kebutuhan proyek Anda, 
                 dari konsep awal hingga implementasi akhir.
               </p>
@@ -272,7 +272,7 @@ export default function Home() {
               ].map((service, index) => (
                 <motion.div 
                   key={service.id}
-                  className="group bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300"
+                  className="group bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl dark:shadow-black/30 dark:hover:shadow-black/50 transition-all duration-300"
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -312,7 +312,7 @@ export default function Home() {
                   
                   {/* Content section */}
                   <div className="p-6">
-                    <p className="text-[#4A4A4A] mb-6">
+                    <p className="text-[#4A4A4A] dark:text-gray-300 mb-6">
                       {service.description}
                     </p>
                     
@@ -321,7 +321,7 @@ export default function Home() {
                       {service.features.map((feature, i) => (
                         <motion.li 
                           key={i}
-                          className="flex items-center text-sm"
+                          className="flex items-center text-sm dark:text-gray-300"
                           initial={{ opacity: 0, x: -10 }}
                           whileInView={{ opacity: 1, x: 0 }}
                           viewport={{ once: true }}
@@ -336,13 +336,13 @@ export default function Home() {
                     {/* Action button */}
                     <Link href={`/service/${service.id}`}>
                       <motion.div
-                        className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100"
+                        className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100 dark:border-gray-700"
                         whileHover={{ x: 5 }}
                         transition={{ type: "spring", stiffness: 400, damping: 10 }}
                       >
-                        <span className="font-medium">Lihat Selengkapnya</span>
-                        <div className="w-8 h-8 bg-[#f8f8f8] rounded-full flex items-center justify-center group-hover:bg-[#FFD700] transition-colors duration-300">
-                          <ArrowRight className="w-4 h-4 text-gray-700 group-hover:text-[#111] transition-colors duration-300" />
+                        <span className="font-medium dark:text-white">Lihat Selengkapnya</span>
+                        <div className="w-8 h-8 bg-[#f8f8f8] dark:bg-gray-700 rounded-full flex items-center justify-center group-hover:bg-[#FFD700] transition-colors duration-300">
+                          <ArrowRight className="w-4 h-4 text-gray-700 dark:text-gray-300 group-hover:text-[#111] transition-colors duration-300" />
                         </div>
                       </motion.div>
                     </Link>
@@ -374,7 +374,7 @@ export default function Home() {
         </section>
         
         {/* Contact preview section */}
-        <section className="py-16 bg-[#F8F8F8]">
+        <section className="py-16 bg-[#F8F8F8] dark:bg-gray-900">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div 
               className="max-w-3xl mx-auto text-center"
@@ -383,13 +383,13 @@ export default function Home() {
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
             >
-              <h2 className="text-3xl font-bold font-serif mb-6">Siap Untuk Mewujudkan Proyek Anda?</h2>
-              <p className="text-[#4A4A4A] mb-8">
+              <h2 className="text-3xl font-bold font-serif mb-6 dark:text-white">Siap Untuk Mewujudkan Proyek Anda?</h2>
+              <p className="text-[#4A4A4A] dark:text-gray-300 mb-8">
                 Konsultasikan kebutuhan proyek Anda dengan tim profesional kami. Kami siap membantu Anda
                 mewujudkan visi desain Anda menjadi kenyataan.
               </p>
               <Link href="/contact">
-                <Button className="bg-[#FFD700] text-[#333333] font-medium py-3 px-8 rounded hover:bg-[#FFD700]/90 transition-colors">
+                <Button className="bg-[#FFD700] text-[#333333] font-medium py-3 px-8 rounded hover:bg-[#FFD700]/90 transition-colors dark:hover:bg-[#FFD700]/80">
                   Hubungi Kami
                 </Button>
               </Link>
