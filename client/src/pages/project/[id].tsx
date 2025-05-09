@@ -485,7 +485,8 @@ export default function ProjectDetailPage() {
                               quality={75}
                               useSrcSet={true}
                               rounded={true}
-                              generateBlurPlaceholder={true}
+                              generateBlurPlaceholder={false}
+                              fadeIn={false}
                             />
                           </div>
                         </motion.div>
@@ -696,7 +697,8 @@ export default function ProjectDetailPage() {
                               objectFit="cover"
                               fill={true}
                               quality={70}
-                              generateBlurPlaceholder={true}
+                              generateBlurPlaceholder={false}
+                              fadeIn={false}
                             />
                             
                             {/* Category badge */}
