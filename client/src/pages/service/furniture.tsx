@@ -659,7 +659,8 @@ export default function FurnitureCatalogPage() {
                               fill={true}
                               objectFit="cover"
                               quality={70}
-                              generateBlurPlaceholder={true}
+                              generateBlurPlaceholder={false}
+                              fadeIn={false}
                             />
                             
                             {/* Badges */}
